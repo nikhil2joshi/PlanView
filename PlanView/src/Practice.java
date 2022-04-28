@@ -25,7 +25,7 @@ public class Practice {
 
 	static {
 		System.setProperty("webdriver.chrome.driver",
-				"C:\\Users\\a566317\\eclipse-workspace\\CodeMaster\\chromedriver.exe");
+				"C:\\Users\\a533186\\Downloads\\chromedriver_win32\\chromedriver.exe");
 		System.out.println("Static block");
 	}
 
