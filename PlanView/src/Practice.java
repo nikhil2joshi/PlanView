@@ -58,7 +58,7 @@ WebDriver driver = new ChromeDriver ();
 		Thread.sleep(5000L);
 		
 		String textToSelect = "WL BE FS TCC Marco Polo";
-		
+		System.out.println("Hi");
 		WebElement optionsToSelect = driver.findElement(By.xpath("//ul[@id='searchUl']/li/a[@title='WL BE FS TCC Marco Polo']"));
 		optionsToSelect.click();
 		
