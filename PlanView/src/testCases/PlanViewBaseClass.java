@@ -37,9 +37,9 @@ public class PlanViewBaseClass {
 
 		WebDriver driver = new ChromeDriver ();
 		driver.get("https://worldline.pvcloud.com/");
-		Thread.sleep(5000L);
+		
 		driver.manage().window().maximize();
-		Thread.sleep(2000L);
+		Thread.sleep(5000L);
 
 		WebElement clickLoginButton = driver.findElement(By.xpath("//div[@class='wg-pki']//input[4]"));
 		clickLoginButton.click();
@@ -70,7 +70,7 @@ public class PlanViewBaseClass {
 		NewRequirement obj3= new NewRequirement();
 		obj3.addNewRequirement(driver, action1);
 		
-		driver.quit();
+		//driver.quit();
 	}
 
 }
