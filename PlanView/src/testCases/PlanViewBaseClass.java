@@ -1,6 +1,5 @@
 package testCases;
 
-
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
@@ -36,25 +35,23 @@ public class PlanViewBaseClass {
 	public static void main(String[] args) throws InterruptedException, AWTException, IOException {
 
 		WebDriver driver = new ChromeDriver ();
-		driver.get("https://worldline.pvcloud.com/");
+		WebDriverWait wait=new WebDriverWait(driver, 10000);
 		
+		driver.get("https://worldline.pvcloud.com/");
 		driver.manage().window().maximize();
 		Thread.sleep(5000L);
 
-		WebElement clickLoginButton = driver.findElement(By.xpath("//div[@class='wg-pki']//input[4]"));
-		clickLoginButton.click();
+		driver.findElement(By.xpath("//div[@class='wg-pki']//input[4]")).click(); // click on login Button
 		
+		Thread.sleep(10000L);// Wait for user to select certificate and enter PIN
 		
-		Thread.sleep(10000L);
 		System.out.println(driver.getTitle());
 		
 		if(driver.getTitle().contains("My Overview - Planview"));{
 			System.out.println("Login Successful Dashboard Navigation Complete....");
 		}
 		
-		
-		WebDriverWait wait=new WebDriverWait(driver, 10000);
-		
+				
 		Thread.sleep(2000L);
 		SearchProject obj1= new SearchProject();
 		obj1.searchbyprojectname(driver, wait);
@@ -68,7 +65,7 @@ public class PlanViewBaseClass {
 		obj2.createTask(driver, wait, action1);
 		
 		NewRequirement obj3= new NewRequirement();
-		obj3.addNewRequirement(driver, action1);
+		obj3.addNewRequirement(driver, action1,"GSDRS/SDCO/GSC\\\\SPM03-Senior Consultant - Testing");
 		
 		//driver.quit();
 	}

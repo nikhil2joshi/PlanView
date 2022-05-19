@@ -8,8 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class SearchProject {
-	
+public class SearchProject {	
 	
 	public void searchbyprojectname(WebDriver driver, WebDriverWait wait) throws InterruptedException {
 		
@@ -19,8 +18,7 @@ public class SearchProject {
 	
 		searchClick.sendKeys(textToSearch);
 		Thread.sleep(5000L);
-		
-	
+			
 		WebElement optionsToSelect = driver.findElement(By.xpath("//ul[@id='searchUl']/li/a[@title='"+textToSearch+"']"));
 		wait.until(ExpectedConditions.elementToBeClickable(optionsToSelect));
 		optionsToSelect.click();
