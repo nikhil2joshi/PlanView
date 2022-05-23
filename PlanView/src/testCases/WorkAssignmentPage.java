@@ -1,5 +1,7 @@
 package testCases;
 
+import org.openqa.selenium.NoSuchElementException;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -18,12 +20,13 @@ public class WorkAssignmentPage {
 		WebElement clickMenuIcon = driver
 				.findElement(By.xpath("//button[@id='PVBannerTitleBarMenuButton']/span[@title='Actions']"));
 		clickMenuIcon.click();
-		// Thread.sleep(3000L);
+		Thread.sleep(3000L);
 
 		WebElement selectWorkAssgmnt = driver
 				.findElement(By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]"));
+		// String titlePage= driver.getTitle();
 		selectWorkAssgmnt.click();
-		Thread.sleep(2000L);
+		Thread.sleep(5000L);
 		verifyManageSchedule(driver, wait);
 
 	}
@@ -39,12 +42,18 @@ public class WorkAssignmentPage {
 
 	}
 
-	public void createTask(WebDriver driver, WebDriverWait wait, Actions action1) throws InterruptedException {
+	public void createTask(WebDriver driver, WebDriverWait wait, Actions action1, String taskName)
+			throws InterruptedException {
 		// TODO Auto-generated method stub
-
-		action1.moveToElement(driver.findElement(By.xpath(
-				"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']")))
-				.click().build().perform();
+		try {
+		
+			action1.moveToElement(driver.findElement(By.xpath(
+					"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']")))
+					.click().build().perform();
+		}
+		catch(NoSuchElementException e) {
+			System.out.println("dock-right-icon Element not found");
+		}
 		Thread.sleep(3000L);
 
 		action1.moveToElement(driver.findElement(By.xpath("//button[@title='collapse: click to hide child rows']")))
@@ -60,10 +69,10 @@ public class WorkAssignmentPage {
 		selectInserUnder.click();
 		Thread.sleep(5000L);
 
-		String taskName = "Demo_Task_2201";
 		action1.moveToElement(
 				driver.findElement(By.xpath("//span[@class='grid-drag-handle icon icon5x13 sm-vertical-ellipses']")))
 				.doubleClick().sendKeys(taskName).sendKeys(Keys.ENTER).build().perform();
+
 		Thread.sleep(5000L);
 
 		action1.moveToElement(driver.findElement(By.xpath("//span[contains(text(),'" + taskName + "')]")))
@@ -74,6 +83,6 @@ public class WorkAssignmentPage {
 		action1.moveToElement(assignmentmenuoption).perform();
 		assignmentmenuoption.click();
 		Thread.sleep(2000L);
-
+		
 	}
 }
