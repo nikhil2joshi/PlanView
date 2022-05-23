@@ -17,10 +17,12 @@ public class AddAllocation {
 				"//div[@class='slick-cell l2 r2 hasEditor selected row-selected row-selected-top row-selected-bottom']")))
 				.contextClick().build().perform();
 		Thread.sleep(2000);
-		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Fill Requirement']"))).perform();
+		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Fill Requirement']")))
+				.perform();
 		Thread.sleep(2000);
-		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"))).click().perform();
-		
+		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"))).click()
+				.perform();
+
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
 		System.out.println(allWindowHandles);
@@ -35,29 +37,28 @@ public class AddAllocation {
 
 				driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
 				driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
-				
-				
-				driver.findElement(By.id("attribute_description")).sendKeys(empName); // Click on Description textbox and send EmpName
+
+				driver.findElement(By.id("attribute_description")).sendKeys(empName); // Click on Description textbox
+																						// and send EmpName
 				Thread.sleep(2000);
 				driver.findElement(By.xpath("//input[@id='_search']")).click();
-				
+
 				driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
-								
+
 				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
 				Thread.sleep(2000L);
 				// Clicking on searched GCMRole
 				driver.findElement(By.xpath("//a[contains(text(),'" + empName + "')]")).click();
-				
+
 				driver.switchTo().defaultContent();
 				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
 
 				driver.switchTo().window(mainWindowHandle);
 
-				
 			}
 		}
-		
+
 	}
 
 }
