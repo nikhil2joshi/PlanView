@@ -188,5 +188,6 @@ public class PlanViewBaseClass {
 			// Set current task to new task name
 			currentTaskName = excelDataObject.taskName;
 		}
+		
 	}
 }
