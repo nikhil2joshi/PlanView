@@ -7,9 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WorkAssignmentPage {
@@ -27,7 +25,9 @@ public class WorkAssignmentPage {
 		// String titlePage= driver.getTitle();
 		selectWorkAssgmnt.click();
 		Thread.sleep(5000L);
-		verifyManageSchedule(driver, wait);
+		
+		//ManageSchedule verification not needed anymore as it can be changed by user
+		//verifyManageSchedule(driver, wait);
 
 	}
 
@@ -46,12 +46,11 @@ public class WorkAssignmentPage {
 			throws InterruptedException {
 		// TODO Auto-generated method stub
 		try {
-		
+
 			action1.moveToElement(driver.findElement(By.xpath(
 					"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']")))
 					.click().build().perform();
-		}
-		catch(NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
 			System.out.println("dock-right-icon Element not found");
 		}
 		Thread.sleep(3000L);
@@ -74,15 +73,16 @@ public class WorkAssignmentPage {
 				.doubleClick().sendKeys(taskName).sendKeys(Keys.ENTER).build().perform();
 
 		Thread.sleep(5000L);
-
+		
+		//right click on taskName
 		action1.moveToElement(driver.findElement(By.xpath("//span[contains(text(),'" + taskName + "')]")))
 				.contextClick().build().perform();
 		Thread.sleep(3000L);
-
-		WebElement assignmentmenuoption = driver.findElement(By.xpath("//a[contains(text(),'Task Information')]"));
-		action1.moveToElement(assignmentmenuoption).perform();
-		assignmentmenuoption.click();
-		Thread.sleep(2000L);
 		
+		//click on task information
+		driver.findElement(By.xpath("//a[contains(text(),'Task Information')]")).click();
+		
+		Thread.sleep(2000L);
+
 	}
 }

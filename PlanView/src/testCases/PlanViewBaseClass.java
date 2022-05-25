@@ -33,71 +33,64 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 // = new ArrayList<ExcelDataObject>();
 class ExcelDataObject {
 
-	String empName, taskName, startDate, endDate, gcmRole;
+	String empName, taskName, startDate, endDate, gcmRole, projectName, wbsCode;
 
 	List<ExcelDataObject> getExcelData(String Path, List<ExcelDataObject> excelDataObjects) {
 
 		excelDataObjects = new ArrayList<ExcelDataObject>();
 		try {
 			FileInputStream file = new FileInputStream(Path);
-
 			// Create Workbook instance holding reference to .xlsx file
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
-
 			// Get first desired sheet from the workbook
 			XSSFSheet sheet = workbook.getSheet("Master");
 
 			// Iterate through each rows one by one
 			Iterator<Row> rowIterator = sheet.iterator();
+			String wbsCode = null;
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
+
 				ExcelDataObject excelDataObject = new ExcelDataObject();
 				// For each row, iterate through all the columns
 				Iterator<Cell> cellIterator = row.cellIterator();
+				while (cellIterator.hasNext() && row.getRowNum() == 0) {
+					Cell cell = cellIterator.next();
+					if (cell.getColumnIndex() == 0) {
+						excelDataObject.projectName = cell.toString();
+					} else if (cell.getColumnIndex() == 5) {
+						wbsCode = cell.toString();
+
+					}
+				}
 
 				while (cellIterator.hasNext() && row.getRowNum() > 0) {
-					Cell cell = cellIterator.next();
-					System.out.println(row.getRowNum() + " " + cell.getColumnIndex());
+					Cell cell1 = cellIterator.next();
+
 					// Check the cell type and format accordingly
-					if (cell.getColumnIndex() == 1) {
-						System.out.println(row.getRowNum() + " " + cell.getColumnIndex());
-
-						excelDataObject.empName = cell.toString();
-						System.out.println(excelDataObject.empName);
-
-					} else if (cell.getColumnIndex() == 2) {
-						System.out.println(row.getRowNum() + " " + cell.getColumnIndex());
-						excelDataObject.taskName = cell.toString();
-						System.out.println(excelDataObject.taskName);
-					} else if (cell.getColumnIndex() == 3) {
-						System.out.println(row.getRowNum() + " " + cell.getColumnIndex());
-						excelDataObject.startDate = cell.toString();
-						System.out.println(excelDataObject.startDate);
-
-					} else if (cell.getColumnIndex() == 4) {
-						System.out.println(row.getRowNum() + " " + cell.getColumnIndex());
-						excelDataObject.endDate = cell.toString();
-						System.out.println(excelDataObject.endDate);
-
-					} else if (cell.getColumnIndex() == 5) {
-						System.out.println(row.getRowNum() + " " + cell.getColumnIndex());
-						excelDataObject.gcmRole = cell.toString();
-						System.out.println(excelDataObject.gcmRole);
-
+					if (cell1.getColumnIndex() == 1) {
+						excelDataObject.empName = cell1.toString();
+					} else if (cell1.getColumnIndex() == 2) {
+						excelDataObject.taskName = cell1.toString();
+					} else if (cell1.getColumnIndex() == 3) {
+						excelDataObject.startDate = cell1.toString();
+					} else if (cell1.getColumnIndex() == 4) {
+						excelDataObject.endDate = cell1.toString();
+					} else if (cell1.getColumnIndex() == 5) {
+						excelDataObject.gcmRole = cell1.toString();
 					}
 
 					System.out.println("");
 				}
-				if (excelDataObject.empName != null)
+				if (excelDataObject.empName != null) {
+					excelDataObject.wbsCode = wbsCode;
 					excelDataObjects.add(excelDataObject);
-
+				}
 			}
 			workbook.close();
 			file.close();
 
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -138,11 +131,6 @@ public class PlanViewBaseClass {
 		}
 
 		Thread.sleep(2000L);
-		SearchProject obj1 = new SearchProject();
-		obj1.searchbyprojectname(driver, wait);
-
-		WorkAssignmentPage workAssignmentPage = new WorkAssignmentPage();
-		workAssignmentPage.navigateWorkAssignmentPage(driver, wait);
 
 		Actions action1 = new Actions(driver);
 
@@ -158,14 +146,22 @@ public class PlanViewBaseClass {
 		// First time add requirement and allocate
 		String currentTaskName = null;
 
-		NewRequirement newRequirement = new NewRequirement();
-		AddAllocation addAllocation = new AddAllocation();
+		NewRequirement newRequirement;
+		AddAllocation addAllocation;
+		WorkAssignmentPage workAssignmentPage;
 		if (iterator.hasNext()) {
 			excelDataObject = (ExcelDataObject) iterator.next();
-			currentTaskName = excelDataObject.taskName;
+			if (excelDataObject.empName == null) {
+				SearchProject obj1 = new SearchProject();
+				obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
+
+				workAssignmentPage = new WorkAssignmentPage();
+				workAssignmentPage.navigateWorkAssignmentPage(driver, wait);
+			} else
+				currentTaskName = excelDataObject.taskName;
 		}
 		while (iterator.hasNext()) {
-
+			// first task addition without comparison
 			workAssignmentPage.createTask(driver, wait, action1, excelDataObject.taskName);
 			newRequirement = new NewRequirement();
 			newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
@@ -175,6 +171,10 @@ public class PlanViewBaseClass {
 
 			if (iterator.hasNext())
 				excelDataObject = (ExcelDataObject) iterator.next();
+
+			// Compare next task in loop with earlier task if same then only add GCM and
+			// Employee
+			// If not then come out of for loop and add new task
 			for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
 
 				newRequirement = new NewRequirement();
@@ -185,6 +185,7 @@ public class PlanViewBaseClass {
 				excelDataObject = (ExcelDataObject) iterator.next();
 
 			}
+			// Set current task to new task name
 			currentTaskName = excelDataObject.taskName;
 		}
 	}

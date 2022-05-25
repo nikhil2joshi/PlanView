@@ -10,16 +10,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SearchProject {	
 	
-	public void searchbyprojectname(WebDriver driver, WebDriverWait wait) throws InterruptedException {
-		
-		String textToSearch="WL BE FS TCC Marco Polo";
+	public void searchbyprojectname(WebDriver driver, WebDriverWait wait, String projectName) throws InterruptedException {
 		
 		WebElement searchClick=driver.findElement(By.id("bannerSearchBox"));
 	
-		searchClick.sendKeys(textToSearch);
+		searchClick.sendKeys(projectName);
 		Thread.sleep(5000L);
 			
-		WebElement optionsToSelect = driver.findElement(By.xpath("//ul[@id='searchUl']/li/a[@title='"+textToSearch+"']"));
+		WebElement optionsToSelect = driver.findElement(By.xpath("//ul[@id='searchUl']/li/a[@title='"+projectName+"']"));
 		wait.until(ExpectedConditions.elementToBeClickable(optionsToSelect));
 		optionsToSelect.click();
 		
