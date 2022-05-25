@@ -2,6 +2,10 @@ package testCases;
 
 import org.openqa.selenium.NoSuchElementException;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -59,6 +63,8 @@ public class WorkAssignmentPage {
 		action1.moveToElement(driver.findElement(By.xpath("//button[@title='collapse: click to hide child rows']")))
 				.click().build().perform();
 		Thread.sleep(3000L);
+		
+		getTasksCount(driver);
 
 		WebElement clickProjectMenuoption = driver
 				.findElement(By.xpath("//div[@class='ActionLinkButton']/span[1]/span[1]"));
@@ -83,6 +89,41 @@ public class WorkAssignmentPage {
 		action1.moveToElement(assignmentmenuoption).perform();
 		assignmentmenuoption.click();
 		Thread.sleep(2000L);
+		
+	}
+	
+	public void deleteTask(WebDriver driver,Actions action1) throws InterruptedException {
+		
+		System.out.println("Enter task name to be deleted--------");
+		
+		Scanner sc1= new Scanner(System.in);
+		String taskNametobeDeleted =sc1.next();
+		Thread.sleep(3000L);
+		
+		action1.moveToElement(driver.findElement(By.xpath("//span[contains(text(),'" + taskNametobeDeleted + "')]")))
+		.contextClick().build().perform();
+		
+		WebElement deleteOptionClick = driver.findElement(By.xpath("//a[contains(text(),'Delete')]"));	
+		Thread.sleep(3000L);
+		deleteOptionClick.click();
+		
+		Thread.sleep(3000L);
+		
+		driver.switchTo().alert().accept();
+		Thread.sleep(3000L);
+		
+	}
+	
+	public void getTasksCount(WebDriver driver) {
+		
+		List<WebElement> allTasks= driver.findElements(By.xpath("//span[@class='prm-work']"));
+		
+		for(int i=0;i<allTasks.size();i++) {
+			
+			String taskName=allTasks.get(i).getText();
+			System.out.println(taskName);
+			
+		}
 		
 	}
 }
