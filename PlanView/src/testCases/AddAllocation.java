@@ -6,7 +6,7 @@ import java.util.Set;
 import org.openqa.selenium.By;
 
 import org.openqa.selenium.WebDriver;
-
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 public class AddAllocation {
@@ -22,10 +22,10 @@ public class AddAllocation {
 		Thread.sleep(2000);
 		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"))).click()
 				.perform();
-
+		Thread.sleep(2000);
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
-		System.out.println(allWindowHandles);
+
 		Iterator<String> iterator = allWindowHandles.iterator();
 
 		while (iterator.hasNext()) {
@@ -41,7 +41,9 @@ public class AddAllocation {
 				driver.findElement(By.id("attribute_description")).sendKeys(empName); // Click on Description textbox
 																						// and send EmpName
 				Thread.sleep(2000);
-				driver.findElement(By.xpath("//input[@id='_search']")).click();
+				WebElement searchButton;
+				searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
+				searchButton.click();
 
 				driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
 
@@ -49,7 +51,8 @@ public class AddAllocation {
 
 				Thread.sleep(2000L);
 				// Clicking on searched GCMRole
-				driver.findElement(By.xpath("//a[contains(text(),'" + empName + "')]")).click();
+				WebElement gcmRole = driver.findElement(By.xpath("//a[contains(text(),'" + empName + "')]"));
+				gcmRole.click();
 
 				driver.switchTo().defaultContent();
 				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
