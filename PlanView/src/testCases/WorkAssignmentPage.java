@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
@@ -31,6 +32,61 @@ public class WorkAssignmentPage {
 		// String titlePage= driver.getTitle();
 		selectWorkAssgmnt.click();
 		// Thread.sleep(5000L);
+
+	}
+
+	public void addWBSElement(WebDriver driver, Actions action1, String empName) throws InterruptedException {
+		Thread.sleep(2000);
+		WebElement WBSCode = driver.findElement(By.xpath(
+				"//div[@class='ui-widget-content slick-row odd active']/div[@class='slick-cell l6 r6 hasEditor selected row-selected row-selected-top row-selected-bottom']"));
+		action1.moveToElement(WBSCode).doubleClick().sendKeys("ZI701248001-TOGSD1002383-0A06").sendKeys(Keys.ENTER)
+				.build().perform();
+
+		driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']")).click();
+
+		Thread.sleep(2000);
+		
+		
+		String mainWindowHandle = driver.getWindowHandle();
+		Set<String> allWindowHandles = driver.getWindowHandles();
+
+		Iterator<String> iterator = allWindowHandles.iterator();
+
+		while (iterator.hasNext()) {
+
+			String ChildWindow = iterator.next();
+			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
+				driver.switchTo().window(ChildWindow).manage().window().maximize();
+				driver.manage().window().maximize();
+				Thread.sleep(2000);
+				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
+				
+				driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
+				driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
+
+				driver.findElement(By.id("attribute_description")).sendKeys("ZI701248001-TOGSD1002383-0A06"); // Click on Description textbox
+																						// and send EmpName
+				Thread.sleep(2000);
+				WebElement searchButton;
+				searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
+				searchButton.click();
+
+				driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
+
+				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
+
+				Thread.sleep(2000L);
+				// Clicking on searched GCMRole
+				WebElement wbsCode = driver.findElement(By.xpath("//a[contains(text(),'ZI701248001-TOGSD1002383-0A06')]"));
+				wbsCode.click();
+
+				driver.switchTo().defaultContent();
+				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
+
+				driver.switchTo().window(mainWindowHandle);
+
+			}
+		}
 
 	}
 
@@ -73,19 +129,18 @@ public class WorkAssignmentPage {
 		WebElement taskWebElement = driver.findElement(By.xpath("//span[contains(text(),'" + taskName + "')]"));
 		action1.moveToElement(taskWebElement).contextClick().build().perform();
 		// List<WebElement> elements = driver.findElements(By.cssSelector("#gh-ac"));
-		System.out.println(taskWebElement.getClass() + taskWebElement.getAttribute("class")
-				+ taskWebElement.getAttribute("style"));
-		List<WebElement> elements = driver.findElements(By.cssSelector("div[class*='active']"));
-		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
-			WebElement webElement = (WebElement) iterator.next();
-			System.out.println("Class : " + webElement.getAttribute("class"));
-			System.out.println("Style : " + webElement.getAttribute("Style"));
 
-		}
-
-		// WebElement element = null;
-		// System.out.println(Arrays.asList(element.getAttribute("class").split("
-		// ")).contains("active"));
+		/*
+		 * List<WebElement> elements =
+		 * driver.findElements(By.cssSelector("div[class*='active']")); for (Iterator
+		 * iterator = elements.iterator(); iterator.hasNext();) { WebElement webElement
+		 * = (WebElement) iterator.next(); System.out.println("Class : " +
+		 * webElement.getAttribute("class")); System.out.println("Style : " +
+		 * webElement.getAttribute("Style"));
+		 * 
+		 * }
+		 */
+		addWBSElement(driver,action1, "ZI701248001-TOGSD1002383-0A06");
 		Thread.sleep(2000L);
 
 		// click on task information
