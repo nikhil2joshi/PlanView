@@ -2,6 +2,7 @@ package testCases;
 
 import org.openqa.selenium.NoSuchElementException;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -23,17 +24,15 @@ public class WorkAssignmentPage {
 		WebElement clickMenuIcon = driver
 				.findElement(By.xpath("//button[@id='PVBannerTitleBarMenuButton']/span[@title='Actions']"));
 		clickMenuIcon.click();
-		//Thread.sleep(3000L);
+		// Thread.sleep(3000L);
 
 		WebElement selectWorkAssgmnt = driver
 				.findElement(By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]"));
 		// String titlePage= driver.getTitle();
 		selectWorkAssgmnt.click();
-		//Thread.sleep(5000L);
-		
+		// Thread.sleep(5000L);
+
 	}
-
-
 
 	public void createTask(WebDriver driver, WebDriverWait wait, Actions action1, String taskName)
 			throws InterruptedException {
@@ -47,18 +46,18 @@ public class WorkAssignmentPage {
 		} catch (NoSuchElementException e) {
 			System.out.println("dock-right-icon Element not found");
 		}
-		//Thread.sleep(3000L);
+		Thread.sleep(3000L);
 
 		action1.moveToElement(driver.findElement(By.xpath("//button[@title='collapse: click to hide child rows']")))
 				.click().build().perform();
-		//Thread.sleep(3000L);
-		
+		// Thread.sleep(3000L);
+
 		getTasksCount(driver);
 
 		WebElement clickProjectMenuoption = driver
 				.findElement(By.xpath("//div[@class='ActionLinkButton']/span[1]/span[1]"));
 		clickProjectMenuoption.click();
-		//Thread.sleep(3000L);
+		// Thread.sleep(3000L);
 
 		WebElement selectInserUnder = driver.findElement(By.xpath("//span[@class='pv12FastTrackInsertUnder']/span[1]"));
 		selectInserUnder.click();
@@ -69,51 +68,65 @@ public class WorkAssignmentPage {
 				.doubleClick().sendKeys(taskName).sendKeys(Keys.ENTER).build().perform();
 
 		Thread.sleep(2000L);
-		
-		//right click on taskName
-		action1.moveToElement(driver.findElement(By.xpath("//span[contains(text(),'" + taskName + "')]")))
-				.contextClick().build().perform();
+
+		// right click on taskName
+		WebElement taskWebElement = driver.findElement(By.xpath("//span[contains(text(),'" + taskName + "')]"));
+		action1.moveToElement(taskWebElement).contextClick().build().perform();
+		// List<WebElement> elements = driver.findElements(By.cssSelector("#gh-ac"));
+		System.out.println(taskWebElement.getClass() + taskWebElement.getAttribute("class")
+				+ taskWebElement.getAttribute("style"));
+		List<WebElement> elements = driver.findElements(By.cssSelector("div[class*='active']"));
+		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+			WebElement webElement = (WebElement) iterator.next();
+			System.out.println("Class : " + webElement.getAttribute("class"));
+			System.out.println("Style : " + webElement.getAttribute("Style"));
+
+		}
+
+		// WebElement element = null;
+		// System.out.println(Arrays.asList(element.getAttribute("class").split("
+		// ")).contains("active"));
 		Thread.sleep(2000L);
-		
-		//click on task information
+
+		// click on task information
 		driver.findElement(By.xpath("//a[contains(text(),'Task Information')]")).click();
-		
+
 		Thread.sleep(2000L);
 
 	}
-	
-	public void deleteTask(WebDriver driver,Actions action1) throws InterruptedException {
-		
+
+	public void deleteTask(WebDriver driver, Actions action1) throws InterruptedException {
+
 		System.out.println("Enter task name to be deleted--------");
-		
-		Scanner sc1= new Scanner(System.in);
-		String taskNametobeDeleted =sc1.next();
+
+		Scanner sc1 = new Scanner(System.in);
+		String taskNametobeDeleted = sc1.next();
 		Thread.sleep(3000L);
-		
+
 		action1.moveToElement(driver.findElement(By.xpath("//span[contains(text(),'" + taskNametobeDeleted + "')]")))
-		.contextClick().build().perform();
-		
-		WebElement deleteOptionClick = driver.findElement(By.xpath("//a[contains(text(),'Delete')]"));	
+				.contextClick().build().perform();
+
+		WebElement deleteOptionClick = driver.findElement(By.xpath("//a[contains(text(),'Delete')]"));
 		Thread.sleep(3000L);
 		deleteOptionClick.click();
-		
+
 		Thread.sleep(3000L);
-		
+
 		driver.switchTo().alert().accept();
 		Thread.sleep(3000L);
-		
+
 	}
-	
+
 	public void getTasksCount(WebDriver driver) {
-		
-		List<WebElement> allTasks= driver.findElements(By.xpath("//span[@class='prm-work']"));
-		
-		for(int i=0;i<allTasks.size();i++) {
-			
-			String taskName=allTasks.get(i).getText();
+
+		List<WebElement> allTasks = driver.findElements(By.xpath("//span[@class='prm-work']"));
+
+		for (int i = 0; i < allTasks.size(); i++) {
+
+			String taskName = allTasks.get(i).getText();
 			System.out.println(taskName);
-			
+
 		}
-		
+
 	}
 }

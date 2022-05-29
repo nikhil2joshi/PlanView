@@ -186,7 +186,8 @@ public class PlanViewBaseClass {
 
 		ExcelDataObject excelDataObject = new ExcelDataObject();
 		List<ExcelDataObject> excelDataObjects2 = excelDataObject.getExcelData(
-				System.getProperty("user.dir") + "\\src\\testData\\TimesheetTasksCollection.xlsm", excelDataObjects);
+				"C:\\Users\\a566317\\git\\PlanView\\PlanView\\src\\testData\\TimesheetTasksCollection.xlsm",
+				excelDataObjects);
 
 		Iterator<ExcelDataObject> iterator = excelDataObjects2.iterator();
 		// First time add requirement and allocate
@@ -197,8 +198,8 @@ public class PlanViewBaseClass {
 		WorkAssignmentPage workAssignmentPage = new WorkAssignmentPage();
 		;
 		excelDataObject = (ExcelDataObject) iterator.next();
-		if (iterator.hasNext() && excelDataObject.empName != null) {
-
+		if (iterator.hasNext()) {
+			
 			if (excelDataObject.empName == null) {
 				SearchProject obj1 = new SearchProject();
 				obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
@@ -215,6 +216,7 @@ public class PlanViewBaseClass {
 			}
 			// first task addition without comparison
 			workAssignmentPage.createTask(driver, wait, action1, excelDataObject.taskName);
+			
 			newRequirement = new NewRequirement();
 			newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
 
