@@ -79,44 +79,41 @@ class ExcelDataObject {
 		return monthnum + "/" + dateArray1[0] + "/" + dateArray1[2];
 	}
 
-	List<ExcelDataObject> getStartAndEndDates(WebDriver driver, WebDriverWait wait, Actions action1, List<ExcelDataObject> excelDataObjects)
-			throws ParseException {
+	List<ExcelDataObject> getStartAndEndDates(WebDriver driver, WebDriverWait wait, Actions action1,
+			List<ExcelDataObject> excelDataObjects) throws ParseException {
 		ExcelDataObject excelDataObject = new ExcelDataObject();
-			List<ExcelDataObject> excelDataObjects2 = excelDataObject.getExcelData(
-					System.getProperty("user.dir") + "\\src\\testData\\TimesheetTasksCollection.xlsm", excelDataObjects);
+		List<ExcelDataObject> excelDataObjects2 = excelDataObject.getExcelData(
+				System.getProperty("user.dir") + "\\src\\testData\\TimesheetTasksCollection.xlsm", excelDataObjects);
 
-			Iterator<ExcelDataObject> iterator = excelDataObjects2.iterator();
-			// First time add requirement and allocate
-			String currentTaskName = null;
+		Iterator<ExcelDataObject> iterator = excelDataObjects2.iterator();
+		// First time add requirement and allocate
+		String currentTaskName = null;
 
-			excelDataObject = (ExcelDataObject) iterator.next();
-			if (iterator.hasNext()) {
+		excelDataObject = (ExcelDataObject) iterator.next();
+		if (iterator.hasNext()) {
 
-				if (excelDataObject.empName == null) {
-								
-					excelDataObject = (ExcelDataObject) iterator.next();
-					currentTaskName = excelDataObject.taskName;
-				}
+			if (excelDataObject.empName == null) {
 
-			}
-			while (iterator.hasNext() && excelDataObject.empName != null) {
-
-				
-
-				if (iterator.hasNext())
-					excelDataObject = (ExcelDataObject) iterator.next();
-
-				
-				for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
-
-					excelDataObject = (ExcelDataObject) iterator.next();
-
-				}
-				// Set current task to new task name
+				excelDataObject = (ExcelDataObject) iterator.next();
 				currentTaskName = excelDataObject.taskName;
 			}
-			return excelDataObjects2;
+
+		}
+		while (iterator.hasNext() && excelDataObject.empName != null) {
+
+			if (iterator.hasNext())
+				excelDataObject = (ExcelDataObject) iterator.next();
+
+			for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
+
+				excelDataObject = (ExcelDataObject) iterator.next();
+
 			}
+			// Set current task to new task name
+			currentTaskName = excelDataObject.taskName;
+		}
+		return excelDataObjects2;
+	}
 
 	List<ExcelDataObject> getExcelData(String Path, List<ExcelDataObject> excelDataObjects) {
 
