@@ -2,6 +2,7 @@ package testCases;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 
@@ -12,17 +13,18 @@ import org.openqa.selenium.interactions.Actions;
 public class AddAllocation {
 
 	public void addAllocation(WebDriver driver, Actions action1, String empName) throws InterruptedException {
-		Thread.sleep(2000);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		// Thread.sleep(2000);
 		action1.moveToElement(driver.findElement(By.xpath(
 				"//div[@class='slick-cell l2 r2 hasEditor selected row-selected row-selected-top row-selected-bottom']")))
 				.contextClick().build().perform();
-		Thread.sleep(2000);
+		// Thread.sleep(2000);
 		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Fill Requirement']")))
 				.perform();
-		Thread.sleep(2000);
+		// Thread.sleep(2000);
 		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"))).click()
 				.perform();
-		Thread.sleep(2000);
+		// Thread.sleep(2000);
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
 
@@ -40,7 +42,7 @@ public class AddAllocation {
 
 				driver.findElement(By.id("attribute_description")).sendKeys(empName); // Click on Description textbox
 																						// and send EmpName
-				Thread.sleep(2000);
+				// Thread.sleep(2000);
 				WebElement searchButton;
 				searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
 				searchButton.click();
@@ -49,7 +51,7 @@ public class AddAllocation {
 
 				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
-				Thread.sleep(2000L);
+				// Thread.sleep(2000L);
 				// Clicking on searched GCMRole
 				WebElement gcmRole = driver.findElement(By.xpath("//a[contains(text(),'" + empName + "')]"));
 				gcmRole.click();

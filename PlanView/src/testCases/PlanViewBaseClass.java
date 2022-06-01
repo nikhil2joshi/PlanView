@@ -1,13 +1,16 @@
 package testCases;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.concurrent.TimeUnit;
 import java.awt.AWTException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -25,7 +28,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-// = new ArrayList<ExcelDataObject>();
 class ExcelDataObject {
 
 	String empName, taskName, startDate, endDate, gcmRole, projectName, wbsCode;
@@ -76,6 +78,45 @@ class ExcelDataObject {
 
 		return monthnum + "/" + dateArray1[0] + "/" + dateArray1[2];
 	}
+
+	List<ExcelDataObject> getStartAndEndDates(WebDriver driver, WebDriverWait wait, Actions action1, List<ExcelDataObject> excelDataObjects)
+			throws ParseException {
+		ExcelDataObject excelDataObject = new ExcelDataObject();
+			List<ExcelDataObject> excelDataObjects2 = excelDataObject.getExcelData(
+					System.getProperty("user.dir") + "\\src\\testData\\TimesheetTasksCollection.xlsm", excelDataObjects);
+
+			Iterator<ExcelDataObject> iterator = excelDataObjects2.iterator();
+			// First time add requirement and allocate
+			String currentTaskName = null;
+
+			excelDataObject = (ExcelDataObject) iterator.next();
+			if (iterator.hasNext()) {
+
+				if (excelDataObject.empName == null) {
+								
+					excelDataObject = (ExcelDataObject) iterator.next();
+					currentTaskName = excelDataObject.taskName;
+				}
+
+			}
+			while (iterator.hasNext() && excelDataObject.empName != null) {
+
+				
+
+				if (iterator.hasNext())
+					excelDataObject = (ExcelDataObject) iterator.next();
+
+				
+				for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
+
+					excelDataObject = (ExcelDataObject) iterator.next();
+
+				}
+				// Set current task to new task name
+				currentTaskName = excelDataObject.taskName;
+			}
+			return excelDataObjects2;
+			}
 
 	List<ExcelDataObject> getExcelData(String Path, List<ExcelDataObject> excelDataObjects) {
 
@@ -163,6 +204,7 @@ public class PlanViewBaseClass {
 	public static void main(String[] args) throws InterruptedException, AWTException, IOException {
 
 		WebDriver driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, 10000);
 		// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.get("https://worldline.pvcloud.com/");
@@ -174,20 +216,13 @@ public class PlanViewBaseClass {
 
 		System.out.println(driver.getTitle());
 
-		if (driver.getTitle().contains("My Overview - Planview"))
-			;
-		{
-			System.out.println("Login Successful Dashboard Navigation Complete....");
-		}
-
 		Actions action1 = new Actions(driver);
 
 		// workAssignmentPage.createTask(driver, wait, action1);
 
 		ExcelDataObject excelDataObject = new ExcelDataObject();
 		List<ExcelDataObject> excelDataObjects2 = excelDataObject.getExcelData(
-				"C:\\Users\\a566317\\git\\PlanView\\PlanView\\src\\testData\\TimesheetTasksCollection.xlsm",
-				excelDataObjects);
+				System.getProperty("user.dir") + "\\src\\testData\\TimesheetTasksCollection.xlsm", excelDataObjects);
 
 		Iterator<ExcelDataObject> iterator = excelDataObjects2.iterator();
 		// First time add requirement and allocate
@@ -196,10 +231,10 @@ public class PlanViewBaseClass {
 		NewRequirement newRequirement;
 		AddAllocation addAllocation;
 		WorkAssignmentPage workAssignmentPage = new WorkAssignmentPage();
-		;
+
 		excelDataObject = (ExcelDataObject) iterator.next();
 		if (iterator.hasNext()) {
-			
+
 			if (excelDataObject.empName == null) {
 				SearchProject obj1 = new SearchProject();
 				obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
@@ -211,12 +246,10 @@ public class PlanViewBaseClass {
 
 		}
 		while (iterator.hasNext() && excelDataObject.empName != null) {
-			if (currentTaskName.equals("SK12 - TS")) {
-				System.out.println("Reached SK12");
-			}
+
 			// first task addition without comparison
-			workAssignmentPage.createTask(driver, wait, action1, excelDataObject.taskName);
-			
+			workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
+
 			newRequirement = new NewRequirement();
 			newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
 
@@ -244,7 +277,7 @@ public class PlanViewBaseClass {
 		}
 
 		// Create last task
-		workAssignmentPage.createTask(driver, wait, action1, excelDataObject.taskName);
+		workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
 		newRequirement = new NewRequirement();
 		newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
 
