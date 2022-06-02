@@ -18,12 +18,13 @@ public class NewRequirement {
 
 		// Click on Requirement
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
 		driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
 				.click();
 		Thread.sleep(2000L);
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
-		//System.out.println(allWindowHandles);
+		// System.out.println(allWindowHandles);
 		Iterator<String> iterator = allWindowHandles.iterator();
 
 		while (iterator.hasNext()) {
@@ -65,7 +66,7 @@ public class NewRequirement {
 				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
 
 				Thread.sleep(2000L);
-				
+
 				driver.switchTo().window(mainWindowHandle);
 
 				driver.findElement(By.xpath("//input[@id='bannerSearchBox']")).click();

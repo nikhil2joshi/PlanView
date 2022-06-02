@@ -45,7 +45,8 @@ public class WorkAssignmentPage {
 		// row-selected row-selected-top row-selected-bottom']")));
 		WebElement webElementWBSCode = null;
 		Thread.sleep(2000);
-		webElementWBSCode = driver.findElement(By.cssSelector("div[class*='selected'][class*='l6']"));
+		webElementWBSCode = driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]"));
 
 		action1.moveToElement(webElementWBSCode).doubleClick().sendKeys(WBSCode).sendKeys(Keys.ENTER).build().perform();
 
@@ -133,16 +134,19 @@ public class WorkAssignmentPage {
 		addWBSElement(driver, action1, excelDataobject.wbsCode);
 		Thread.sleep(2000L);
 
-		action1.moveToElement(driver.findElement(By.cssSelector("div[class*='selected'][class*='l7']"))).doubleClick()
-				.sendKeys(excelDataobject.startDate).sendKeys(Keys.ENTER).build().perform();
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().sendKeys(excelDataobject.startDate).sendKeys(Keys.ENTER).build().perform();
 		Thread.sleep(2000L);
 
-		action1.moveToElement(driver.findElement(By.cssSelector("div[class*='selected'][class*='l8']"))).doubleClick()
-				.sendKeys(excelDataobject.endDate).sendKeys(Keys.ENTER).build().perform();
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l8 r8 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().sendKeys(excelDataobject.endDate).sendKeys(Keys.ENTER).build().perform();
 		Thread.sleep(2000L);
 
-		action1.moveToElement(driver.findElement(By.cssSelector("div[class*='selected'][class*='l9']"))).doubleClick()
-				.build().perform();
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l9 r9 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().build().perform();
 
 		Thread.sleep(2000L);
 
@@ -151,18 +155,21 @@ public class WorkAssignmentPage {
 
 		Thread.sleep(2000L);
 
-		action1.moveToElement(driver.findElement(By.cssSelector("div[class*='selected'][class*='l5']"))).doubleClick()
-				.build().perform();
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().build().perform();
 
 		Thread.sleep(2000L);
-		action1.moveToElement(driver.findElement(By.cssSelector("div[class*='selected'][class*='l5']"))).doubleClick()
-				.build().perform();
-
-		// row-selected-bottom
-		Select send2SAP = new Select(driver.findElement(By.xpath("//select[@class='editor-scode']")));
-		Thread.sleep(2000L);
-		send2SAP.selectByVisibleText("Yes");
-		Thread.sleep(2000L);
+		/*
+		 * action1.moveToElement(driver.findElement(By.xpath(
+		 * "//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]"
+		 * ))) .doubleClick().build().perform();
+		 * 
+		 * // row-selected-bottom Select send2SAP = new
+		 * Select(driver.findElement(By.xpath("//select[@class='editor-scode']")));
+		 * Thread.sleep(2000L); send2SAP.selectByVisibleText("Yes");
+		 * Thread.sleep(2000L);
+		 */
 		WebElement taskWebElement = driver
 				.findElement(By.xpath("//span[contains(text(),'" + excelDataobject.taskName + "')]"));
 		action1.moveToElement(taskWebElement).contextClick().build().perform();
