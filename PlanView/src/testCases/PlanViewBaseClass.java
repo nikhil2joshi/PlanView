@@ -105,9 +105,9 @@ public class PlanViewBaseClass {
 								System.out.println(driver.getTitle());
 
 								Actions action1 = new Actions(driver);
-								// driver.manage().window().setPosition();
-								driver.manage().window().setPosition(new Point(0, -2000));
-								// workAssignmentPage.createTask(driver, wait, action1);
+								
+								//driver.manage().window().setPosition(new Point(0, -2000));
+								
 
 								ExcelDataObject excelDataObject = new ExcelDataObject();
 								List<ExcelDataObject> excelDataObjects2 = excelDataObject.getExcelData(
@@ -127,7 +127,7 @@ public class PlanViewBaseClass {
 
 									if (excelDataObject.empName == null) {
 										SearchProject obj1 = new SearchProject();
-										obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
+										obj1.searchbyprojectname(driver, wait, excelDataObject);
 
 										workAssignmentPage.navigateWorkAssignmentPage(driver, wait);
 										excelDataObject = (ExcelDataObject) iterator.next();
@@ -141,7 +141,7 @@ public class PlanViewBaseClass {
 									workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
 
 									newRequirement = new NewRequirement();
-									newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+									newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 									addAllocation = new AddAllocation();
 									addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -155,7 +155,7 @@ public class PlanViewBaseClass {
 									for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
 
 										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+										newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -170,7 +170,7 @@ public class PlanViewBaseClass {
 								if (!iterator.hasNext()) {
 									if (currentTaskName.equals(excelDataObject.taskName)) {
 										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+										newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -179,7 +179,7 @@ public class PlanViewBaseClass {
 										workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
 
 										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+										newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
