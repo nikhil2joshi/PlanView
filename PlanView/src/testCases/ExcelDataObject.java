@@ -13,8 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelDataObject {
 
-
-	String empName, taskName, startDate, endDate, gcmRole, projectName, wbsCode;
+	String sequenceID, empName, taskName, startDate, endDate, gcmRole, projectName, wbsCode;
 
 	String getdate(String date) {
 		String dateArray1[] = date.split("-");
@@ -140,6 +139,5 @@ public class ExcelDataObject {
 		return excelDataObjects;
 
 	}
-
 
 }

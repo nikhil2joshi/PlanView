@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -17,22 +18,24 @@ public class NewRequirement {
 	public void addNewRequirement(WebDriver driver, Actions action1, String gcmRole) throws InterruptedException {
 
 		// Click on Requirement
+		driver.manage().window().setPosition(new Point(0, -2000));
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
 		driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
 				.click();
 		Thread.sleep(2000L);
+		driver.manage().window().setPosition(new Point(0, -2000));
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
 		// System.out.println(allWindowHandles);
+		driver.manage().window().setPosition(new Point(0, -2000));
 		Iterator<String> iterator = allWindowHandles.iterator();
 
 		while (iterator.hasNext()) {
 
 			String ChildWindow = iterator.next();
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
-				driver.switchTo().window(ChildWindow).manage().window().maximize();
-				driver.manage().window().maximize();
+				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -2000));
 
 				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
 				Thread.sleep(2000L);
@@ -68,7 +71,8 @@ public class NewRequirement {
 				Thread.sleep(2000L);
 
 				driver.switchTo().window(mainWindowHandle);
-
+				driver.manage().window().setPosition(new Point(0, -2000));
+				;
 				driver.findElement(By.xpath("//input[@id='bannerSearchBox']")).click();
 
 			}

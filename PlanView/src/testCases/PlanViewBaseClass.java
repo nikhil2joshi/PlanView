@@ -6,47 +6,33 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Label;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-
-import java.sql.Connection;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
+
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import testCases.AddAllocation;
-import testCases.ExcelDataObject;
-import testCases.NewRequirement;
-import testCases.SearchProject;
-import testCases.WorkAssignmentPage;
 
 //import javax.swing.JRadioButton;
 
@@ -58,14 +44,11 @@ public class PlanViewBaseClass {
 		String path = System.getProperty("user.dir");
 		System.out.println("Chromedriver loading" + path);
 		System.setProperty("webdriver.chrome.driver", path + "\\chromedriver.exe");
-		options = new ChromeOptions();
-		options.addArguments("--headless");
-		ChromeDriver chromeDriver = new ChromeDriver(options);
 		System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
 
 	}
 
-	private JFrame frame;
+	private static JFrame frame;
 	private static JButton btnNewButton;
 
 	/*
@@ -83,11 +66,8 @@ public class PlanViewBaseClass {
 	 * DB Connection Details
 	 */
 
-	private JTabbedPane tabbedPane;
-
+	private static JTabbedPane tabbedPane;
 	private static JTextArea textArea_Console;
-
-	private static Connection conn;
 
 	/**
 	 * Launch the application.
@@ -96,24 +76,26 @@ public class PlanViewBaseClass {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-
-					PlanViewBaseClass window = new PlanViewBaseClass();
-					window.frame.setVisible(true);
-					window.frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+					PlanViewBaseClass pvc = new PlanViewBaseClass();
+					PlanViewBaseClass.frame.setVisible(true);
+					PlanViewBaseClass.frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 					textArea_Console.setText(null);
+
 					btnNewButton.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							
+							options = new ChromeOptions();
+							// options.addArguments("--headless");
+							textArea_Console.setText(null);
 							WebDriver driver = new ChromeDriver(options);
 							try {
 								redirectSystemStreams(textArea_Console);
-								
+
 								driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 								WebDriverWait wait = new WebDriverWait(driver, 10000);
 								// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 								driver.get("https://worldline.pvcloud.com/");
 								driver.manage().window().maximize();
-
+								
 								driver.findElement(By.xpath("//div[@class='wg-pki']//input[4]")).click(); // click on
 																											// login
 																											// Button
@@ -123,7 +105,8 @@ public class PlanViewBaseClass {
 								System.out.println(driver.getTitle());
 
 								Actions action1 = new Actions(driver);
-
+								// driver.manage().window().setPosition();
+								driver.manage().window().setPosition(new Point(0, -2000));
 								// workAssignmentPage.createTask(driver, wait, action1);
 
 								ExcelDataObject excelDataObject = new ExcelDataObject();
@@ -138,7 +121,7 @@ public class PlanViewBaseClass {
 								NewRequirement newRequirement;
 								AddAllocation addAllocation;
 								WorkAssignmentPage workAssignmentPage = new WorkAssignmentPage();
-								boolean flag = false;
+
 								excelDataObject = (ExcelDataObject) iterator.next();
 								if (iterator.hasNext()) {
 
@@ -182,7 +165,8 @@ public class PlanViewBaseClass {
 									if (iterator.hasNext())
 										currentTaskName = excelDataObject.taskName;
 								}
-								// adding last entry
+								
+								// adding last entry in excel
 								if (!iterator.hasNext()) {
 									if (currentTaskName.equals(excelDataObject.taskName)) {
 										newRequirement = new NewRequirement();
@@ -272,7 +256,6 @@ public class PlanViewBaseClass {
 		panel_2.add(btnNewButton);
 
 	}
-
 
 	private static void updateTextArea(final String text, final JTextArea Console) {
 		SwingUtilities.invokeLater(new Runnable() {
