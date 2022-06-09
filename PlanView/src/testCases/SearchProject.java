@@ -8,20 +8,20 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class SearchProject {
-
-	public void searchbyprojectname(WebDriver driver, WebDriverWait wait, ExcelDataObject excelDataObject)
-			throws InterruptedException {
+public class SearchProject {	
+	
+	public void searchbyprojectname(WebDriver driver, WebDriverWait wait, String projectName) throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
-		WebElement searchClick = driver.findElement(By.id("bannerSearchBox"));
-		searchClick.sendKeys(excelDataObject.projectName);
+		
+		WebElement searchClick=driver.findElement(By.id("bannerSearchBox"));
+		searchClick.sendKeys(projectName);
 		Thread.sleep(2000L);
-
-		WebElement optionsToSelect = driver
-				.findElement(By.xpath("//ul[@id='searchUl']/li/a[@title='" + excelDataObject.projectName + "']"));
+			
+		WebElement optionsToSelect = driver.findElement(By.xpath("//ul[@id='searchUl']/li/a[@title='"+projectName+"']"));
 		wait.until(ExpectedConditions.elementToBeClickable(optionsToSelect));
 		optionsToSelect.click();
+		
+		
 
-	}
+	}	
 }

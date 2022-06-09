@@ -15,30 +15,28 @@ public class NewRequirement {
 
 	WebElement assignmentsubmenuoption;
 
-	public void addNewRequirement(WebDriver driver, Actions action1, ExcelDataObject excelDataObject)
-			throws InterruptedException {
+	public void addNewRequirement(WebDriver driver, Actions action1, String gcmRole) throws InterruptedException {
 
 		// Click on Requirement
-		// driver.manage().window().setPosition(new Point(0, -2000));
+		driver.manage().window().setPosition(new Point(0, -2000));
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
 		driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
 				.click();
 		Thread.sleep(2000L);
-		// driver.manage().window().setPosition(new Point(0, -2000));
+		driver.manage().window().setPosition(new Point(0, -2000));
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
 		// System.out.println(allWindowHandles);
-		// driver.manage().window().setPosition(new Point(0, -2000));
+		driver.manage().window().setPosition(new Point(0, -2000));
 		Iterator<String> iterator = allWindowHandles.iterator();
 
 		while (iterator.hasNext()) {
 
 			String ChildWindow = iterator.next();
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
-				// driver.switchTo().window(ChildWindow).manage().window().setPosition(new
-				// Point(0, -2000));
-				driver.switchTo().window(ChildWindow).manage().window().maximize();
+				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -2000));
+
 				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
 				Thread.sleep(2000L);
 
@@ -48,7 +46,7 @@ public class NewRequirement {
 
 				WebElement searchGCMrole = driver
 						.findElement(By.xpath("//label[contains(text(),'Description')]/following-sibling::input[1]"));
-				searchGCMrole.sendKeys(excelDataObject.gcmRole);
+				searchGCMrole.sendKeys(gcmRole);
 
 				driver.findElement(By.xpath("//input[@id='_search']")).click(); // click on search button
 				driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
@@ -63,7 +61,7 @@ public class NewRequirement {
 				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
 				Thread.sleep(2000L);
-				driver.findElement(By.xpath("//a[contains(text(),'" + excelDataObject.gcmRole + "')]")).click(); // Clicking on searched
+				driver.findElement(By.xpath("//a[contains(text(),'" + gcmRole + "')]")).click(); // Clicking on searched
 																									// GCMRole
 
 				driver.switchTo().defaultContent();
@@ -71,11 +69,9 @@ public class NewRequirement {
 				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
 
 				Thread.sleep(2000L);
-				System.out.println(
-						"Requirement added for " + excelDataObject.empName + " with " + excelDataObject.taskName);
 
 				driver.switchTo().window(mainWindowHandle);
-				// driver.manage().window().setPosition(new Point(0, -2000));
+				driver.manage().window().setPosition(new Point(0, -2000));
 				;
 				driver.findElement(By.xpath("//input[@id='bannerSearchBox']")).click();
 
