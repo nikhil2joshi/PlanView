@@ -151,7 +151,9 @@ public class WorkAssignmentPage {
 		action1.moveToElement(driver.findElement(By.xpath(
 				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l9 r9 hasEditor')][contains(@class,'selected')]")))
 				.doubleClick().build().perform();
-
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l9 r9 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().build().perform();
 		Thread.sleep(2000L);
 
 		Select constraintType = new Select(driver.findElement(By.xpath("//select[@class='editor-pick']")));
