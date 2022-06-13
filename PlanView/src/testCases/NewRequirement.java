@@ -20,15 +20,15 @@ public class NewRequirement {
 		// Click on Requirement
 		driver.manage().window().setPosition(new Point(0, -2000));
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(2000L);
 		driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
+		Thread.sleep(2000L);
 		driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
 				.click();
 		Thread.sleep(2000L);
-		driver.manage().window().setPosition(new Point(0, -2000));
+		
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
-		// System.out.println(allWindowHandles);
-		driver.manage().window().setPosition(new Point(0, -2000));
 		Iterator<String> iterator = allWindowHandles.iterator();
 
 		while (iterator.hasNext()) {
@@ -36,6 +36,7 @@ public class NewRequirement {
 			String ChildWindow = iterator.next();
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
 				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -2000));
+				// driver.switchTo().window(ChildWindow).manage().window().maximize();
 
 				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
 				Thread.sleep(2000L);
@@ -72,8 +73,6 @@ public class NewRequirement {
 
 				driver.switchTo().window(mainWindowHandle);
 				driver.manage().window().setPosition(new Point(0, -2000));
-				;
-				driver.findElement(By.xpath("//input[@id='bannerSearchBox']")).click();
 
 			}
 		}

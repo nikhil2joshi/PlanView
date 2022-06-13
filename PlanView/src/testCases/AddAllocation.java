@@ -12,12 +12,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import testData.ExcelDataObject;
+
 public class AddAllocation {
 
 	public void addAllocation(WebDriver driver, Actions action1, ExcelDataObject excelDataObject)
 			throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		// Thread.sleep(2000);
+		Thread.sleep(2000);
 		driver.manage().window().setPosition(new Point(0, -2000));
 		action1.moveToElement(driver.findElement(By.xpath(
 				"//div[@class='slick-cell l2 r2 hasEditor selected row-selected row-selected-top row-selected-bottom']")))
@@ -28,7 +30,6 @@ public class AddAllocation {
 		Thread.sleep(2000);
 		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"))).click()
 				.perform();
-		driver.manage().window().setPosition(new Point(0, -2000));
 		Thread.sleep(2000);
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
@@ -49,7 +50,7 @@ public class AddAllocation {
 																											// Description
 																											// textbox
 					// and send EmpName
-					// Thread.sleep(2000);
+					Thread.sleep(2000);
 					WebElement searchButton;
 					searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
 					searchButton.click();
@@ -58,7 +59,7 @@ public class AddAllocation {
 
 					driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
-					// Thread.sleep(2000L);
+					Thread.sleep(2000L);
 					// Clicking on searched GCMRole
 					WebElement gcmRole = driver
 							.findElement(By.xpath("//a[contains(text(),'" + excelDataObject.empName + "')]"));
@@ -71,8 +72,7 @@ public class AddAllocation {
 
 					driver.manage().window().setPosition(new Point(0, -2000));
 					Thread.sleep(2000);
-					driver.manage().window().setPosition(new Point(0, -2000));
-					;
+					
 					driver.findElement(By.xpath("//a[contains(text(),'Allocate')]")).click();
 					Thread.sleep(2000);
 					driver.findElement(By.xpath("//div[contains(@class,'h-btn-top')]")).click();
@@ -97,11 +97,13 @@ public class AddAllocation {
 				} catch (Exception e) {
 					driver.close();
 					driver.switchTo().window(mainWindowHandle);
+					driver.manage().window().setPosition(new Point(0, -2000));
 					System.out.println(
 							"Allocation not done for " + excelDataObject.empName + " with " + excelDataObject.taskName);
 					Thread.sleep(2000L);
-					driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
-
+					// driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
+					driver.findElement(By.xpath("//a[normalize-space(text())='Require']")).click();
+					Thread.sleep(2000L);
 					action1.moveToElement(driver.findElement(
 							By.xpath("//div[contains(@class,'slick-cell l2 r2 hasEditor')]/div[contains(@title,'"
 									+ excelDataObject.gcmRole + "')]")))
@@ -109,9 +111,14 @@ public class AddAllocation {
 					Thread.sleep(2000L);
 					WebElement deleteOption = driver.findElement(By.xpath("//a[contains(text(),'Delete')]"));
 					JavascriptExecutor executor = (JavascriptExecutor) driver;
+					Thread.sleep(2000L);
 					executor.executeScript("arguments[0].click();", deleteOption);
-					driver.findElement(By.xpath("//div[@class='ui-dialog-buttonset']/button[contains(text(),'Yes')]"))
-							.click();
+					Thread.sleep(2000L);
+
+					WebElement clickYes = driver.findElement(
+							By.xpath("//div[@class='ui-dialog-buttonset']/button[contains(text(),'Yes')]"));
+					Thread.sleep(2000L);
+					executor.executeScript("arguments[0].click();", clickYes);
 				}
 
 			}

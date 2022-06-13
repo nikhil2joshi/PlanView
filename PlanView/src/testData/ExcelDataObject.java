@@ -1,4 +1,4 @@
-package testCases;
+package testData;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,9 +13,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelDataObject {
 
-	String sequenceID, empName, taskName, startDate, endDate, gcmRole, projectName, wbsCode;
+	public String sequenceID;
+	public String empName;
+	public String taskName;
+	public String startDate;
+	public String endDate;
+	public String gcmRole;
+	public String projectName;
+	public String wbsCode;
 
-	String getdate(String date) {
+	public String getdate(String date) {
 		String dateArray1[] = date.split("-");
 		String monthnum = null;
 
@@ -62,7 +69,7 @@ public class ExcelDataObject {
 		return monthnum + "/" + dateArray1[0] + "/" + dateArray1[2];
 	}
 
-	List<ExcelDataObject> getExcelData(String Path, List<ExcelDataObject> excelDataObjects) {
+	public List<ExcelDataObject> getExcelData(String Path, List<ExcelDataObject> excelDataObjects) {
 		XSSFWorkbook workbook = null;
 		XSSFSheet sheet = null;
 		FileInputStream file = null;

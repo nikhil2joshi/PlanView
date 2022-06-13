@@ -15,6 +15,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import testData.ExcelDataObject;
+
 public class WorkAssignmentPage {
 
 	public void navigateWorkAssignmentPage(WebDriver driver, WebDriverWait wait) throws InterruptedException {
@@ -35,10 +37,6 @@ public class WorkAssignmentPage {
 
 	public void addWBSElement(WebDriver driver, Actions action1, String WBSCode) throws InterruptedException {
 
-		// WebDriverWait wait = new WebDriverWait(driver,30);
-		// wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='ui-widget-content
-		// slick-row odd active']/div[@class='slick-cell l6 r6 hasEditor selected
-		// row-selected row-selected-top row-selected-bottom']")));
 		WebElement webElementWBSCode = null;
 		driver.manage().window().setPosition(new Point(0, -2000));
 		Thread.sleep(2000);
@@ -50,10 +48,10 @@ public class WorkAssignmentPage {
 		driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']")).click();
 
 		Thread.sleep(2000);
-		driver.manage().window().setPosition(new Point(0, -2000));
+		
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
-		driver.manage().window().setPosition(new Point(0, -2000));
+		
 		Iterator<String> iterator = allWindowHandles.iterator();
 
 		while (iterator.hasNext()) {
@@ -61,7 +59,8 @@ public class WorkAssignmentPage {
 			String ChildWindow = iterator.next();
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
 				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -2000));
-				;
+
+				//driver.switchTo().window(ChildWindow).manage().window().maximize();
 
 				Thread.sleep(2000);
 				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
@@ -130,10 +129,9 @@ public class WorkAssignmentPage {
 		WebElement currentSeqIdWebElement = driver.findElement(By.xpath(
 				"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')][contains(@class,'selected')]/div[@style='overflow: hidden; text-align: left;']"));
 		String currentSeqID = currentSeqIdWebElement.getAttribute("title");
-		
+
 		excelDataobject.sequenceID = currentSeqID;
 		Thread.sleep(2000L);
-		
 
 		addWBSElement(driver, action1, excelDataobject.wbsCode);
 		Thread.sleep(2000L);
@@ -176,8 +174,7 @@ public class WorkAssignmentPage {
 		 * Thread.sleep(2000L); send2SAP.selectByVisibleText("Yes");
 		 * Thread.sleep(2000L);
 		 */
-		WebElement taskWebElement = driver
-				.findElement(By.xpath("//div[@title='" + excelDataobject.sequenceID + "']"));
+		WebElement taskWebElement = driver.findElement(By.xpath("//div[@title='" + excelDataobject.sequenceID + "']"));
 		action1.moveToElement(taskWebElement).contextClick().build().perform();
 
 		Thread.sleep(2000L);

@@ -34,6 +34,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import testData.ExcelDataObject;
+import java.awt.Font;
+import java.awt.Color;
+
 //import javax.swing.JRadioButton;
 
 public class PlanViewBaseClass {
@@ -47,25 +51,8 @@ public class PlanViewBaseClass {
 		System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
 
 	}
-
 	private static JFrame frame;
 	private static JButton btnNewButton;
-
-	/*
-	 * Export excel file location
-	 */
-
-	static String head;
-	static String line;
-	static List<String> amexDetails = new ArrayList<String>();
-	static int numberOfColumns = 4;
-	static Label lbl1;
-	static Iterator<String> itr1;
-
-	/*
-	 * DB Connection Details
-	 */
-
 	private static JTabbedPane tabbedPane;
 	private static JTextArea textArea_Console;
 
@@ -95,7 +82,7 @@ public class PlanViewBaseClass {
 								// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 								driver.get("https://worldline.pvcloud.com/");
 								driver.manage().window().maximize();
-								
+
 								driver.findElement(By.xpath("//div[@class='wg-pki']//input[4]")).click(); // click on
 																											// login
 																											// Button
@@ -105,10 +92,9 @@ public class PlanViewBaseClass {
 								System.out.println(driver.getTitle());
 
 								Actions action1 = new Actions(driver);
-								// driver.manage().window().setPosition();
-								driver.manage().window().setPosition(new Point(0, -2000));
-								// workAssignmentPage.createTask(driver, wait, action1);
-
+								driver.manage().window().maximize();
+								//driver.manage().window().setPosition(new Point(0, -2000));
+								
 								ExcelDataObject excelDataObject = new ExcelDataObject();
 								List<ExcelDataObject> excelDataObjects2 = excelDataObject.getExcelData(
 										System.getProperty("user.dir") + "\\TimesheetTasksCollection.xlsm",
@@ -165,7 +151,7 @@ public class PlanViewBaseClass {
 									if (iterator.hasNext())
 										currentTaskName = excelDataObject.taskName;
 								}
-								
+
 								// adding last entry in excel
 								if (!iterator.hasNext()) {
 									if (currentTaskName.equals(excelDataObject.taskName)) {
@@ -217,13 +203,16 @@ public class PlanViewBaseClass {
 	private void initialize() {
 
 		frame = new JFrame();
+		frame.setBackground(new Color(255, 255, 255));
 		frame.setBounds(100, 100, 536, 468);
+		frame.setState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(102, 255, 204));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 0, 0, 0, 400, 0, 0, 0, 0, 0 };
+		gbl_panel.columnWidths = new int[] { 30, 30, 30, 1000, 30, 30, 30, 300, 0 };
 		gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_panel.columnWeights = new double[] { 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, Double.MIN_VALUE };
 		gbl_panel.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
@@ -239,21 +228,37 @@ public class PlanViewBaseClass {
 		panel.add(tabbedPane, gbc_tabbedPane);
 
 		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(51, 204, 255));
 		tabbedPane.addTab("PlanView", null, panel_2, null);
 		panel_2.setLayout(null);
 
 		textArea_Console = new JTextArea();
-		textArea_Console.setBounds(282, 50, 641, 560);
+		textArea_Console.setBounds(68, 10, 641, 560);
 		panel_2.add(textArea_Console);
 
 		JScrollPane scrollPane = new JScrollPane(textArea_Console);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(24, 100, 941, 562);
+		scrollPane.setBounds(24, 100, 1200, 800);
 		panel_2.add(scrollPane);
 
 		btnNewButton = new JButton("Start");
-		btnNewButton.setBounds(189, 39, 85, 21);
+		btnNewButton.setBackground(new Color(255, 255, 255));
+		btnNewButton.setForeground(new Color(0, 0, 0));
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnNewButton.setBounds(400, 35, 100, 50);
 		panel_2.add(btnNewButton);
+
+		JButton startButton = new JButton("Clear");
+		startButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textArea_Console.setText(null);
+			}
+		});
+		startButton.setForeground(Color.BLACK);
+		startButton.setFont(new Font("Tahoma", Font.BOLD, 15));
+		startButton.setBackground(new Color(255, 255, 255));
+		startButton.setBounds(600, 35, 100, 50);
+		panel_2.add(startButton);
 
 	}
 
