@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -16,7 +17,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -46,15 +49,16 @@ public class PlanViewBaseClass {
 	static {
 
 		String path = System.getProperty("user.dir");
-		System.out.println("Chromedriver loading" + path);
 		System.setProperty("webdriver.chrome.driver", path + "\\chromedriver.exe");
 		System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
 
 	}
 	private static JFrame frame;
-	private static JButton btnNewButton;
+	private static JButton btnstartButton, btnSelectFile, btnclearButton;
 	private static JTabbedPane tabbedPane;
 	private static JTextArea textArea_Console;
+	private static JFileChooser fileChooser;
+	private static JLabel filePath;
 
 	/**
 	 * Launch the application.
@@ -62,68 +66,123 @@ public class PlanViewBaseClass {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					PlanViewBaseClass pvc = new PlanViewBaseClass();
-					PlanViewBaseClass.frame.setVisible(true);
-					PlanViewBaseClass.frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-					textArea_Console.setText(null);
+				PlanViewBaseClass pvc = new PlanViewBaseClass();
+				PlanViewBaseClass.frame.setVisible(true);
+				PlanViewBaseClass.frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+				textArea_Console.setText(null);
+				btnstartButton.setEnabled(false);
+				btnclearButton.setEnabled(false);
 
-					btnNewButton.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							options = new ChromeOptions();
-							// options.addArguments("--headless");
-							textArea_Console.setText(null);
-							WebDriver driver = new ChromeDriver(options);
-							try {
-								redirectSystemStreams(textArea_Console);
+				btnSelectFile.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
 
-								driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-								WebDriverWait wait = new WebDriverWait(driver, 10000);
-								// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-								driver.get("https://worldline.pvcloud.com/");
-								driver.manage().window().maximize();
+						String flag = e.getActionCommand();
+						if (flag.equals("Select File")) {
+							fileChooser = new JFileChooser();
+							int dialogVal = fileChooser.showOpenDialog(null);
+							if (dialogVal == JFileChooser.APPROVE_OPTION) {
+								filePath.setText(fileChooser.getSelectedFile().getAbsolutePath());
+								btnstartButton.setEnabled(true);
+								btnclearButton.setEnabled(true);
 
-								driver.findElement(By.xpath("//div[@class='wg-pki']//input[4]")).click(); // click on
-																											// login
-																											// Button
+							} else {
+								filePath.setText(" Selection of the file cancelled... !");
+							}
+						}
+					}
 
-								Thread.sleep(10000L);// Wait for user to select certificate and enter PIN
+				});
 
-								System.out.println(driver.getTitle());
+				btnstartButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						options = new ChromeOptions();
+						// options.addArguments("--headless");
+						textArea_Console.setText(null);
+						WebDriver driver = new ChromeDriver(options);
+						try {
+							redirectSystemStreams(textArea_Console);
 
-								Actions action1 = new Actions(driver);
-								driver.manage().window().maximize();
-								//driver.manage().window().setPosition(new Point(0, -2000));
-								
-								ExcelDataObject excelDataObject = new ExcelDataObject();
-								List<ExcelDataObject> excelDataObjects2 = excelDataObject.getExcelData(
-										System.getProperty("user.dir") + "\\TimesheetTasksCollection.xlsm",
-										excelDataObjects);
+							driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+							WebDriverWait wait = new WebDriverWait(driver, 10000);
+							// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+							driver.get("https://worldline.pvcloud.com/");
+							driver.manage().window().maximize();
+							driver.findElement(By.xpath("//div[@class='wg-pki']//input[4]")).click(); // click on login
+																										// Button
+							Thread.sleep(10000L);// Wait for user to select certificate and enter PIN
 
-								Iterator<ExcelDataObject> iterator = excelDataObjects2.iterator();
-								// First time add requirement and allocate
-								String currentTaskName = null;
+							Actions action1 = new Actions(driver);
 
-								NewRequirement newRequirement;
-								AddAllocation addAllocation;
-								WorkAssignmentPage workAssignmentPage = new WorkAssignmentPage();
+							driver.manage().window().setPosition(new Point(0, -2000));
 
-								excelDataObject = (ExcelDataObject) iterator.next();
-								if (iterator.hasNext()) {
+							ExcelDataObject excelDataObject = new ExcelDataObject();
+							List<ExcelDataObject> excelDataObjects2 = null;
+							String file_path = filePath.getText();
+							file_path = file_path.replace("\\", "\\\\");
+							excelDataObjects2 = excelDataObject.getExcelData(file_path, excelDataObjects);
 
-									if (excelDataObject.empName == null) {
-										SearchProject obj1 = new SearchProject();
-										obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
+							Iterator<ExcelDataObject> iterator = excelDataObjects2.iterator();
+							// First time add requirement and allocate
+							String currentTaskName = null;
 
-										workAssignmentPage.navigateWorkAssignmentPage(driver, wait);
-										excelDataObject = (ExcelDataObject) iterator.next();
-										currentTaskName = excelDataObject.taskName;
-									}
+							NewRequirement newRequirement = null;
+							AddAllocation addAllocation = null;
+							WorkAssignmentPage workAssignmentPage = new WorkAssignmentPage();
+
+							excelDataObject = (ExcelDataObject) iterator.next();
+							if (iterator.hasNext()) {
+
+								if (excelDataObject.empName == null) {
+									SearchProject obj1 = new SearchProject();
+									obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
+
+									workAssignmentPage.navigateWorkAssignmentPage(driver, wait);
+									excelDataObject = (ExcelDataObject) iterator.next();
+									currentTaskName = excelDataObject.taskName;
+								}
+
+							}
+							while (iterator.hasNext() && excelDataObject.empName != null) {
+
+								// first task addition without comparison
+								workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
+
+								newRequirement = new NewRequirement();
+								newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+
+								addAllocation = new AddAllocation();
+								addAllocation.addAllocation(driver, action1, excelDataObject);
+
+								if (iterator.hasNext())
+									excelDataObject = (ExcelDataObject) iterator.next();
+
+								// Compare next task in loop with earlier task if same then only add GCM and
+								// Employee
+								// If not then come out of for loop and add new task
+								for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
+
+									newRequirement = new NewRequirement();
+									newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+
+									addAllocation = new AddAllocation();
+									addAllocation.addAllocation(driver, action1, excelDataObject);
+									excelDataObject = (ExcelDataObject) iterator.next();
 
 								}
-								while (iterator.hasNext() && excelDataObject.empName != null) {
+								if (iterator.hasNext())
+									currentTaskName = excelDataObject.taskName;
+							}
 
-									// first task addition without comparison
+							// adding last entry in excel
+							if (!iterator.hasNext()) {
+								if (currentTaskName.equals(excelDataObject.taskName)) {
+									newRequirement = new NewRequirement();
+									newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+
+									addAllocation = new AddAllocation();
+									addAllocation.addAllocation(driver, action1, excelDataObject);
+
+								} else {
 									workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
 
 									newRequirement = new NewRequirement();
@@ -132,59 +191,18 @@ public class PlanViewBaseClass {
 									addAllocation = new AddAllocation();
 									addAllocation.addAllocation(driver, action1, excelDataObject);
 
-									if (iterator.hasNext())
-										excelDataObject = (ExcelDataObject) iterator.next();
-
-									// Compare next task in loop with earlier task if same then only add GCM and
-									// Employee
-									// If not then come out of for loop and add new task
-									for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
-
-										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
-
-										addAllocation = new AddAllocation();
-										addAllocation.addAllocation(driver, action1, excelDataObject);
-										excelDataObject = (ExcelDataObject) iterator.next();
-
-									}
-									if (iterator.hasNext())
-										currentTaskName = excelDataObject.taskName;
 								}
-
-								// adding last entry in excel
-								if (!iterator.hasNext()) {
-									if (currentTaskName.equals(excelDataObject.taskName)) {
-										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
-
-										addAllocation = new AddAllocation();
-										addAllocation.addAllocation(driver, action1, excelDataObject);
-
-									} else {
-										workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
-
-										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
-
-										addAllocation = new AddAllocation();
-										addAllocation.addAllocation(driver, action1, excelDataObject);
-
-									}
-								}
-
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							} finally {
-								driver.quit();
 							}
 
+						} catch (InterruptedException e2) {
+							// TODO Auto-generated catch block
+							System.out.println("");
+						} finally {
+							driver.quit();
 						}
-					});
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+					}
+				});
 
 			}
 		});
@@ -233,32 +251,49 @@ public class PlanViewBaseClass {
 		panel_2.setLayout(null);
 
 		textArea_Console = new JTextArea();
-		textArea_Console.setBounds(68, 10, 641, 560);
+		textArea_Console.setBounds(68, 10, 441, 560);
 		panel_2.add(textArea_Console);
 
 		JScrollPane scrollPane = new JScrollPane(textArea_Console);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(24, 100, 1200, 800);
+		scrollPane.setBounds(24, 200, 1200, 600);
 		panel_2.add(scrollPane);
 
-		btnNewButton = new JButton("Start");
-		btnNewButton.setBackground(new Color(255, 255, 255));
-		btnNewButton.setForeground(new Color(0, 0, 0));
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnNewButton.setBounds(400, 35, 100, 50);
-		panel_2.add(btnNewButton);
+		btnstartButton = new JButton("Start");
+		btnstartButton.setBackground(new Color(255, 255, 255));
+		btnstartButton.setForeground(new Color(0, 0, 0));
+		btnstartButton.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnstartButton.setBounds(550, 35, 100, 50);
+		panel_2.add(btnstartButton);
 
-		JButton startButton = new JButton("Clear");
-		startButton.addActionListener(new ActionListener() {
+		btnSelectFile = new JButton("Select File");
+		btnSelectFile.setBackground(new Color(255, 255, 255));
+		btnSelectFile.setForeground(new Color(0, 0, 0));
+		btnSelectFile.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnSelectFile.setBounds(200, 35, 150, 50);
+		panel_2.add(btnSelectFile);
+
+		filePath = new JLabel("Please select file path ....");
+		filePath.setBackground(new Color(255, 255, 255));
+		filePath.setForeground(new Color(0, 0, 0));
+		filePath.setFont(new Font("Tahoma", Font.BOLD, 15));
+		filePath.setBounds(200, 100, 850, 50);
+		panel_2.add(filePath);
+
+		btnclearButton = new JButton("Clear");
+		btnclearButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textArea_Console.setText(null);
+				filePath.setText("Please select file path ....");
+				btnstartButton.setEnabled(false);
+				btnclearButton.setEnabled(false);
 			}
 		});
-		startButton.setForeground(Color.BLACK);
-		startButton.setFont(new Font("Tahoma", Font.BOLD, 15));
-		startButton.setBackground(new Color(255, 255, 255));
-		startButton.setBounds(600, 35, 100, 50);
-		panel_2.add(startButton);
+		btnclearButton.setForeground(Color.BLACK);
+		btnclearButton.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnclearButton.setBackground(new Color(255, 255, 255));
+		btnclearButton.setBounds(750, 35, 100, 50);
+		panel_2.add(btnclearButton);
 
 	}
 
@@ -266,7 +301,6 @@ public class PlanViewBaseClass {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				Console.append(text);
-
 			}
 		});
 	}

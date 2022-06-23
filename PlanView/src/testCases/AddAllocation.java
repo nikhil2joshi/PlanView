@@ -72,7 +72,7 @@ public class AddAllocation {
 
 					driver.manage().window().setPosition(new Point(0, -2000));
 					Thread.sleep(2000);
-					
+
 					driver.findElement(By.xpath("//a[contains(text(),'Allocate')]")).click();
 					Thread.sleep(2000);
 					driver.findElement(By.xpath("//div[contains(@class,'h-btn-top')]")).click();
@@ -120,10 +120,7 @@ public class AddAllocation {
 					Thread.sleep(2000L);
 					executor.executeScript("arguments[0].click();", clickYes);
 				}
-
 			}
 		}
-
 	}
-
 }

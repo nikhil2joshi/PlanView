@@ -12,6 +12,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,16 +23,33 @@ public class WorkAssignmentPage {
 	public void navigateWorkAssignmentPage(WebDriver driver, WebDriverWait wait) throws InterruptedException {
 		// TODO Auto-generated method stub
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		wait = new WebDriverWait(driver,30);
 		WebElement clickMenuIcon = driver
 				.findElement(By.xpath("//button[@id='PVBannerTitleBarMenuButton']/span[@title='Actions']"));
+		wait.until(ExpectedConditions.elementToBeClickable(clickMenuIcon));
 		clickMenuIcon.click();
-		Thread.sleep(3000L);
+		
 
 		WebElement selectWorkAssgmnt = driver
 				.findElement(By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]"));
 		// String titlePage= driver.getTitle();
+		wait.until(ExpectedConditions.elementToBeClickable(selectWorkAssgmnt));
+		clickMenuIcon.click();
+		
 		selectWorkAssgmnt.click();
-		Thread.sleep(5000L);
+		
+		Thread.sleep(3000L);
+		
+		WebElement selectSchedule = driver.findElement(By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']/span[@class='affordance']"));
+		
+		wait.until(ExpectedConditions.elementToBeClickable(selectSchedule));
+		selectSchedule.click();
+		//Thread.sleep(2000L);
+		
+		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem2']"));
+		wait.until(ExpectedConditions.elementToBeClickable(scheduleDropdown));
+		scheduleDropdown.click();
+		Thread.sleep(2000L);
 
 	}
 
@@ -48,10 +66,10 @@ public class WorkAssignmentPage {
 		driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']")).click();
 
 		Thread.sleep(2000);
-		
+
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
-		
+
 		Iterator<String> iterator = allWindowHandles.iterator();
 
 		while (iterator.hasNext()) {
@@ -60,7 +78,7 @@ public class WorkAssignmentPage {
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
 				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -2000));
 
-				//driver.switchTo().window(ChildWindow).manage().window().maximize();
+				// driver.switchTo().window(ChildWindow).manage().window().maximize();
 
 				Thread.sleep(2000);
 				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
@@ -158,22 +176,21 @@ public class WorkAssignmentPage {
 		constraintType.selectByIndex(0);
 
 		Thread.sleep(2000L);
-
 		action1.moveToElement(driver.findElement(By.xpath(
 				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
 				.doubleClick().build().perform();
 
 		Thread.sleep(2000L);
-		/*
-		 * action1.moveToElement(driver.findElement(By.xpath(
-		 * "//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]"
-		 * ))) .doubleClick().build().perform();
-		 * 
-		 * // row-selected-bottom Select send2SAP = new
-		 * Select(driver.findElement(By.xpath("//select[@class='editor-scode']")));
-		 * Thread.sleep(2000L); send2SAP.selectByVisibleText("Yes");
-		 * Thread.sleep(2000L);
-		 */
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().build().perform();
+
+		// Send Allocation to SAP
+		Select send2SAP = new Select(driver.findElement(By.xpath("//select[@class='editor-scode']")));
+		Thread.sleep(2000L);
+		send2SAP.selectByVisibleText("Yes");
+		Thread.sleep(2000L);
+
 		WebElement taskWebElement = driver.findElement(By.xpath("//div[@title='" + excelDataobject.sequenceID + "']"));
 		action1.moveToElement(taskWebElement).contextClick().build().perform();
 

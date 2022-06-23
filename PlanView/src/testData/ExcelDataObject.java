@@ -1,6 +1,7 @@
 package testData;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -77,7 +78,13 @@ public class ExcelDataObject {
 		try {
 			file = new FileInputStream(Path);
 			// Create Workbook instance holding reference to .xlsx file
-			workbook = new XSSFWorkbook(file);
+			try {
+				workbook = new XSSFWorkbook(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println(
+						"Unable to access file. \n Check if TimesheetTasksCollection.xlsm Excel is already open Or It is not corrupted.");
+			}
 			// Get first desired sheet from the workbook
 			sheet = workbook.getSheet("Master");
 
@@ -130,8 +137,11 @@ public class ExcelDataObject {
 				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (FileNotFoundException e1) {
+			System.out.println(
+					"TimesheetTasksCollection.xlsm Excel File not found. \n Make sure it is in same folder as PlanView.jar file");
+		} catch (NullPointerException e2) {
+			System.out.println("Unable to fetch data from TimesheetTasksCollection.xlsm Excel");
 		} finally {
 			try {
 				workbook.close();

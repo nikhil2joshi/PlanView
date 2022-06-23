@@ -15,7 +15,7 @@ public class SearchProject {
 		
 		WebElement searchClick=driver.findElement(By.id("bannerSearchBox"));
 		searchClick.sendKeys(projectName);
-		Thread.sleep(2000L);
+		Thread.sleep(3000L);
 			
 		WebElement optionsToSelect = driver.findElement(By.xpath("//ul[@id='searchUl']/li/a[@title='"+projectName+"']"));
 		wait.until(ExpectedConditions.elementToBeClickable(optionsToSelect));
