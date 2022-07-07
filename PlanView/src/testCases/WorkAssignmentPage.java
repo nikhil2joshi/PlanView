@@ -23,29 +23,29 @@ public class WorkAssignmentPage {
 	public void navigateWorkAssignmentPage(WebDriver driver, WebDriverWait wait) throws InterruptedException {
 		// TODO Auto-generated method stub
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		wait = new WebDriverWait(driver,30);
+		wait = new WebDriverWait(driver, 30);
 		WebElement clickMenuIcon = driver
 				.findElement(By.xpath("//button[@id='PVBannerTitleBarMenuButton']/span[@title='Actions']"));
 		wait.until(ExpectedConditions.elementToBeClickable(clickMenuIcon));
 		clickMenuIcon.click();
-		
 
+		wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]")));
 		WebElement selectWorkAssgmnt = driver
 				.findElement(By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]"));
-		// String titlePage= driver.getTitle();
-		wait.until(ExpectedConditions.elementToBeClickable(selectWorkAssgmnt));
-		clickMenuIcon.click();
-		
+
 		selectWorkAssgmnt.click();
-		
-		Thread.sleep(3000L);
-		
-		WebElement selectSchedule = driver.findElement(By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']/span[@class='affordance']"));
-		
-		wait.until(ExpectedConditions.elementToBeClickable(selectSchedule));
+
+		Thread.sleep(5000L);
+		wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']")));
+		Thread.sleep(2000L);
+		WebElement selectSchedule = driver.findElement(
+				By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']"));
+
 		selectSchedule.click();
-		//Thread.sleep(2000L);
-		
+		Thread.sleep(2000L);
+
 		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem2']"));
 		wait.until(ExpectedConditions.elementToBeClickable(scheduleDropdown));
 		scheduleDropdown.click();
@@ -65,7 +65,7 @@ public class WorkAssignmentPage {
 
 		driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']")).click();
 
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
@@ -122,15 +122,20 @@ public class WorkAssignmentPage {
 			action1.moveToElement(driver.findElement(By.xpath(
 					"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']")))
 					.click().build().perform();
-		} catch (NoSuchElementException e) {
-
+		} catch (Exception e) {
+			// do nothing and proceed further
 		}
 		Thread.sleep(2000L);
+		try {
+			driver.findElement(By.xpath(
+					"//div[@class='tray-content-widget__content tray-content-widget__right-content']/div[@class='pvFilter form-field']/span[contains(@class,'clear icon icon')]"))
+					.click();
+		} catch (Exception e) {
+			System.out.println("Clear icon not found while adding task " + excelDataobject.taskName);
+		}
 
 		action1.moveToElement(driver.findElement(By.xpath("//button[@title='collapse: click to hide child rows']")))
 				.click().build().perform();
-
-		getTasksCount(driver);
 
 		WebElement clickProjectMenuoption = driver
 				.findElement(By.xpath("//div[@class='ActionLinkButton']/span[1]/span[1]"));
@@ -224,16 +229,11 @@ public class WorkAssignmentPage {
 
 	}
 
-	public void getTasksCount(WebDriver driver) {
+	public List<WebElement> getallCount(WebDriver driver, ExcelDataObject excelDataObject) {
 
 		List<WebElement> allTasks = driver.findElements(By.xpath("//span[@class='prm-work']"));
-
-		for (int i = 0; i < allTasks.size(); i++) {
-
-			String taskName = allTasks.get(i).getText();
-			System.out.println(taskName);
-
-		}
+		//System.out.println(allTasks);
+		return allTasks;
 
 	}
 }

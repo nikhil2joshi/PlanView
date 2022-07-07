@@ -1,6 +1,7 @@
 package testCases;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -123,4 +124,34 @@ public class AddAllocation {
 			}
 		}
 	}
+
+	public void extendAllocation(WebDriver driver, Actions action1, ExcelDataObject excelDataObject,
+			WebElement webElement) throws InterruptedException {
+		action1.moveToElement(webElement).contextClick().build().perform();
+		Thread.sleep(2000L);
+		driver.findElement(By.xpath("//a[contains(text(),'Task Information')]")).click();
+		Thread.sleep(2000L);
+		
+		driver.findElement(By.xpath("//a[contains(text(),'Allocate')]")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//div[contains(@class,'h-btn-top')]")).click();
+		Thread.sleep(2000);
+		driver.findElement(
+				By.xpath("//div[contains(@class,'slick-cell l1 r1 hasEditor')]/div[contains(text(),'"
+						+ excelDataObject.empName + "')]"))
+				.click();
+		Thread.sleep(2000);
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().sendKeys(excelDataObject.startDate).sendKeys(Keys.ENTER).build().perform();
+		Thread.sleep(2000);
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().sendKeys(excelDataObject.endDate).sendKeys(Keys.ENTER).build().perform();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("//div[contains(@class,'h-btn-bottom')]")).click();
+		System.out.println(
+				"Extension done for allocation of " + excelDataObject.empName + " with " + excelDataObject.taskName);
+	}
+
 }

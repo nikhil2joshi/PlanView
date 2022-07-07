@@ -13,7 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelDataObject {
-
+	public String SR;
 	public String sequenceID;
 	public String empName;
 	public String taskName;
@@ -22,6 +22,7 @@ public class ExcelDataObject {
 	public String gcmRole;
 	public String projectName;
 	public String wbsCode;
+	public String taskType;
 
 	public String getdate(String date) {
 		String dateArray1[] = date.split("-");
@@ -64,9 +65,7 @@ public class ExcelDataObject {
 		case "Dec":
 			monthnum = "12";
 			break;
-
 		}
-
 		return monthnum + "/" + dateArray1[0] + "/" + dateArray1[2];
 	}
 
@@ -115,7 +114,9 @@ public class ExcelDataObject {
 					Cell cell1 = cellIterator.next();
 
 					// Check the cell type and format accordingly
-					if (cell1.getColumnIndex() == 1)
+					if (cell1.getColumnIndex() == 0)
+						excelDataObject.SR = cell1.toString();
+					else if (cell1.getColumnIndex() == 1)
 						excelDataObject.empName = cell1.toString();
 					else if (cell1.getColumnIndex() == 2)
 						excelDataObject.taskName = cell1.toString();
@@ -125,6 +126,8 @@ public class ExcelDataObject {
 						excelDataObject.endDate = excelDataObject.getdate(cell1.toString());
 					else if (cell1.getColumnIndex() == 5)
 						excelDataObject.gcmRole = cell1.toString();
+					else if (cell1.getColumnIndex() == 6)
+						excelDataObject.taskType = cell1.toString();
 
 				}
 				if (excelDataObject.empName != null) {
