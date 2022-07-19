@@ -113,8 +113,8 @@ public class WorkAssignmentPage {
 
 	}
 
-	public void createTask(WebDriver driver, WebDriverWait wait, Actions action1, ExcelDataObject excelDataobject)
-			throws InterruptedException {
+	public void createTask(WebDriver driver, WebDriverWait wait, Actions action1, ExcelDataObject excelDataobject,
+			String currentProjectName) throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		// TODO Auto-generated method stub
 		try {
@@ -137,10 +137,18 @@ public class WorkAssignmentPage {
 		action1.moveToElement(driver.findElement(By.xpath("//button[@title='collapse: click to hide child rows']")))
 				.click().build().perform();
 
-		WebElement clickProjectMenuoption = driver
-				.findElement(By.xpath("//div[@class='ActionLinkButton']/span[1]/span[1]"));
-		clickProjectMenuoption.click();
-		Thread.sleep(2000L);
+		
+		for (int k = 0; k <= 5; k++) {
+			try {
+				WebElement clickProjectMenuoption = driver.findElement(By.xpath("//span[contains(@title,'Project')]"));
+				
+				action1.moveToElement(clickProjectMenuoption).contextClick().build().perform();
+				Thread.sleep(2000L);
+				break;
+			} catch (Exception exp) {
+				System.out.println("");
+			}
+		}
 
 		WebElement selectInserUnder = driver.findElement(By.xpath("//span[@class='pv12FastTrackInsertUnder']/span[1]"));
 		selectInserUnder.click();
@@ -232,7 +240,7 @@ public class WorkAssignmentPage {
 	public List<WebElement> getallCount(WebDriver driver, ExcelDataObject excelDataObject) {
 
 		List<WebElement> allTasks = driver.findElements(By.xpath("//span[@class='prm-work']"));
-		//System.out.println(allTasks);
+		// System.out.println(allTasks);
 		return allTasks;
 
 	}

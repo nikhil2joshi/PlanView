@@ -125,9 +125,9 @@ public class ExcelDataObject {
 					else if (cell1.getColumnIndex() == 4)
 						excelDataObject.endDate = excelDataObject.getdate(cell1.toString());
 					else if (cell1.getColumnIndex() == 5)
-						excelDataObject.gcmRole = cell1.toString();
-					else if (cell1.getColumnIndex() == 6)
 						excelDataObject.taskType = cell1.toString();
+					else if (cell1.getColumnIndex() == 6)
+						excelDataObject.gcmRole = cell1.toString();
 
 				}
 				if (excelDataObject.empName != null) {

@@ -68,6 +68,7 @@ public class PlanViewBaseClass {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				PlanViewBaseClass pvc = new PlanViewBaseClass();
@@ -99,6 +100,7 @@ public class PlanViewBaseClass {
 
 				btnstartButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						String currentProjectName = null;
 						options = new ChromeOptions();
 						// options.addArguments("--headless");
 						textArea_Console.setText(null);
@@ -139,7 +141,7 @@ public class PlanViewBaseClass {
 								if (excelDataObject.empName == null) {
 									SearchProject obj1 = new SearchProject();
 									obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
-
+									currentProjectName = excelDataObject.projectName;
 									workAssignmentPage.navigateWorkAssignmentPage(driver, wait);
 									excelDataObject = (ExcelDataObject) iterator.next();
 									currentTaskName = excelDataObject.taskName;
@@ -160,7 +162,8 @@ public class PlanViewBaseClass {
 							while (iterator.hasNext() && excelDataObject.empName != null) {
 								if (excelDataObject.taskType.equals("New")) {
 									// first task addition without comparison
-									workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
+									workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+											currentProjectName);
 
 									newRequirement = new NewRequirement();
 									newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
@@ -187,15 +190,17 @@ public class PlanViewBaseClass {
 									if (iterator.hasNext())
 										currentTaskName = excelDataObject.taskName;
 								} else if (excelDataObject.taskType.equals("Extension")) {
-									driver.findElement(By.xpath("//div[@class='tray-content-widget__content tray-content-widget__right-content']/div[@class='pvFilter form-field']/input[@type='text']")).sendKeys(excelDataObject.taskName);
-									
+									// driver.findElement(By.xpath("//div[@class='tray-content-widget__content
+									// tray-content-widget__right-content']/div[@class='pvFilter
+									// form-field']/input[@type='text']")).sendKeys(excelDataObject.taskName);
+
 									List<WebElement> alltasks = workAssignmentPage.getallCount(driver, excelDataObject);
-									
+
 									boolean flagTaskFound = false;
 									for (Iterator<WebElement> iterator2 = alltasks.iterator(); iterator2.hasNext();) {
 										WebElement tasksToBeExtended = (WebElement) iterator2.next();
-										//System.out.println(alltasks);
-										wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementSelectionStateToBe(tasksToBeExtended,true)));
+										// System.out.println(alltasks);
+										// wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementSelectionStateToBe(tasksToBeExtended,true)));
 										action1.moveToElement(tasksToBeExtended).click().build().perform();
 										if (tasksToBeExtended.getText().contains(excelDataObject.taskName)) {
 											tasksToBeExtended.click();
@@ -203,15 +208,18 @@ public class PlanViewBaseClass {
 											addAllocation.extendAllocation(driver, action1, excelDataObject,
 													tasksToBeExtended);
 											flagTaskFound = true;
-											excelDataObject = (ExcelDataObject) iterator.next();
-											if (iterator.hasNext())
+											if (iterator.hasNext()) {
+												excelDataObject = (ExcelDataObject) iterator.next();
 												currentTaskName = excelDataObject.taskName;
+
+											}
 											break;
 										}
 									}
 									if (flagTaskFound == false) {
 
-										workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
+										workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+												currentProjectName);
 
 										newRequirement = new NewRequirement();
 										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
@@ -219,9 +227,12 @@ public class PlanViewBaseClass {
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
 
-										excelDataObject = (ExcelDataObject) iterator.next();
-										if (iterator.hasNext())
+										// excelDataObject = (ExcelDataObject) iterator.next();
+										if (iterator.hasNext()) {
+											excelDataObject = (ExcelDataObject) iterator.next();
 											currentTaskName = excelDataObject.taskName;
+
+										}
 
 									}
 
@@ -241,7 +252,8 @@ public class PlanViewBaseClass {
 									addAllocation.addAllocation(driver, action1, excelDataObject);
 
 								} else if (excelDataObject.taskType.equals("New")) {
-									workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
+									workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+											currentProjectName);
 
 									newRequirement = new NewRequirement();
 									newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
@@ -250,37 +262,43 @@ public class PlanViewBaseClass {
 									addAllocation.addAllocation(driver, action1, excelDataObject);
 
 								} else if (excelDataObject.taskType.equals("Extension")) {
+
 									List<WebElement> alltasks = workAssignmentPage.getallCount(driver, excelDataObject);
+
 									boolean flagTaskFound = false;
 									for (Iterator<WebElement> iterator2 = alltasks.iterator(); iterator2.hasNext();) {
-										WebElement webElement = (WebElement) iterator2.next();
+										WebElement tasksToBeExtended = (WebElement) iterator2.next();
+										// System.out.println(alltasks);
+										// wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementSelectionStateToBe(tasksToBeExtended,true)));
+										for (int k = 0; k <= 5; k++) {
+											try {
+												Thread.sleep(2000);
+												action1.moveToElement(tasksToBeExtended).click().build().perform();
 
-										action1.moveToElement(webElement).click().build().perform();
-										if (webElement.getText().contains(excelDataObject.taskName)) {
-											webElement.click();
-											addAllocation = new AddAllocation();
-											addAllocation.extendAllocation(driver, action1, excelDataObject,
-													webElement);
-											flagTaskFound = true;
-											excelDataObject = (ExcelDataObject) iterator.next();
-											if (iterator.hasNext())
-												currentTaskName = excelDataObject.taskName;
-											break;
+												if (tasksToBeExtended.getText().contains(excelDataObject.taskName)) {
+													tasksToBeExtended.click();
+													addAllocation = new AddAllocation();
+													addAllocation.extendAllocation(driver, action1, excelDataObject,
+															tasksToBeExtended);
+													flagTaskFound = true;
+													break;
+												}
+												break;
+											} catch (Exception ex) {
+
+											}
 										}
 									}
 									if (flagTaskFound == false) {
 
-										workAssignmentPage.createTask(driver, wait, action1, excelDataObject);
+										workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+												currentProjectName);
 
 										newRequirement = new NewRequirement();
 										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
-
-										excelDataObject = (ExcelDataObject) iterator.next();
-										if (iterator.hasNext())
-											currentTaskName = excelDataObject.taskName;
 
 									}
 
