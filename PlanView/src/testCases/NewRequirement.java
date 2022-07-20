@@ -18,65 +18,69 @@ public class NewRequirement {
 	public void addNewRequirement(WebDriver driver, Actions action1, String gcmRole) throws InterruptedException {
 
 		// Click on Requirement
-		driver.manage().window().setPosition(new Point(0, -3000));
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Thread.sleep(3000L);
-		driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
-		Thread.sleep(3000L);
-		driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
-				.click();
-		Thread.sleep(3000L);
-		
-		String mainWindowHandle = driver.getWindowHandle();
-		Set<String> allWindowHandles = driver.getWindowHandles();
-		Iterator<String> iterator = allWindowHandles.iterator();
+		try {
+			driver.manage().window().setPosition(new Point(0, -3000));
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			Thread.sleep(3000L);
+			driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
+			Thread.sleep(3000L);
+			driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
+					.click();
+			Thread.sleep(3000L);
+			
+			String mainWindowHandle = driver.getWindowHandle();
+			Set<String> allWindowHandles = driver.getWindowHandles();
+			Iterator<String> iterator = allWindowHandles.iterator();
 
-		while (iterator.hasNext()) {
+			while (iterator.hasNext()) {
 
-			String ChildWindow = iterator.next();
-			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
-				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
-				// driver.switchTo().window(ChildWindow).manage().window().maximize();
+				String ChildWindow = iterator.next();
+				if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
+					driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
+					// driver.switchTo().window(ChildWindow).manage().window().maximize();
 
-				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
-				Thread.sleep(3000L);
+					driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
+					Thread.sleep(3000L);
 
-				// Switching to the nested frames so as to reach to intended elements in HTML
-				driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
-				driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
+					// Switching to the nested frames so as to reach to intended elements in HTML
+					driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
+					driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
 
-				WebElement searchGCMrole = driver
-						.findElement(By.xpath("//label[contains(text(),'Description')]/following-sibling::input[1]"));
-				searchGCMrole.sendKeys(gcmRole);
+					WebElement searchGCMrole = driver
+							.findElement(By.xpath("//label[contains(text(),'Description')]/following-sibling::input[1]"));
+					searchGCMrole.sendKeys(gcmRole);
 
-				driver.findElement(By.xpath("//input[@id='_search']")).click(); // click on search button
-				driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
+					driver.findElement(By.xpath("//input[@id='_search']")).click(); // click on search button
+					driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
 
-				/*
-				 * final List<WebElement> iframes = driver.findElements(By.tagName("frame"));
-				 * for (WebElement iframe : iframes) {
-				 * System.out.println(iframe.getAttribute("id")); }
-				 */
+					/*
+					 * final List<WebElement> iframes = driver.findElements(By.tagName("frame"));
+					 * for (WebElement iframe : iframes) {
+					 * System.out.println(iframe.getAttribute("id")); }
+					 */
 
-				// Switch inside the frameSearchlist frame
-				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
+					// Switch inside the frameSearchlist frame
+					driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
-				Thread.sleep(3000L);
-				driver.findElement(By.xpath("//a[contains(text(),'" + gcmRole + "')]")).click(); // Clicking on searched
-																									// GCMRole
+					Thread.sleep(3000L);
+					driver.findElement(By.xpath("//a[contains(text(),'" + gcmRole + "')]")).click(); // Clicking on searched
+																										// GCMRole
 
-				driver.switchTo().defaultContent();
+					driver.switchTo().defaultContent();
 
-				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
+					driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
 
-				Thread.sleep(3000L);
+					Thread.sleep(3000L);
 
-				driver.switchTo().window(mainWindowHandle);
-				driver.manage().window().setPosition(new Point(0, -3000));
+					driver.switchTo().window(mainWindowHandle);
+					driver.manage().window().setPosition(new Point(0, -3000));
 
+				}
 			}
-		}
 
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 }

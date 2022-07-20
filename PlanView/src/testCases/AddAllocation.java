@@ -19,19 +19,25 @@ public class AddAllocation {
 
 	public void addAllocation(WebDriver driver, Actions action1, ExcelDataObject excelDataObject)
 			throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Thread.sleep(3000);
-		driver.manage().window().setPosition(new Point(0, -3000));
-		action1.moveToElement(driver.findElement(By.xpath(
-				"//div[@class='slick-cell l2 r2 hasEditor selected row-selected row-selected-top row-selected-bottom']")))
-				.contextClick().build().perform();
-		Thread.sleep(3000);
-		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Fill Requirement']")))
-				.perform();
-		Thread.sleep(3000);
-		action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"))).click()
-				.perform();
-		Thread.sleep(3000);
+		
+		try {
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			Thread.sleep(3000);
+			driver.manage().window().setPosition(new Point(0, -3000));
+			action1.moveToElement(driver.findElement(By.xpath(
+					"//div[@class='slick-cell l2 r2 hasEditor selected row-selected row-selected-top row-selected-bottom']")))
+					.contextClick().build().perform();
+			Thread.sleep(3000);
+			action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Fill Requirement']")))
+					.perform();
+			Thread.sleep(3000);
+			action1.moveToElement(driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"))).click()
+					.perform();
+			Thread.sleep(3000);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
 
@@ -127,31 +133,36 @@ public class AddAllocation {
 
 	public void extendAllocation(WebDriver driver, Actions action1, ExcelDataObject excelDataObject,
 			WebElement webElement) throws InterruptedException {
-		action1.moveToElement(webElement).contextClick().build().perform();
-		Thread.sleep(3000L);
-		driver.findElement(By.xpath("//a[contains(text(),'Task Information')]")).click();
-		Thread.sleep(3000L);
 		
-		driver.findElement(By.xpath("//a[contains(text(),'Allocate')]")).click();
-		Thread.sleep(3000);
-		driver.findElement(By.xpath("//div[contains(@class,'h-btn-top')]")).click();
-		Thread.sleep(3000);
-		driver.findElement(
-				By.xpath("//div[contains(@class,'slick-cell l1 r1 hasEditor')]/div[contains(text(),'"
-						+ excelDataObject.empName + "')]"))
-				.click();
-		Thread.sleep(3000);
-		action1.moveToElement(driver.findElement(By.xpath(
-				"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]")))
-				.doubleClick().sendKeys(excelDataObject.startDate).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
-		action1.moveToElement(driver.findElement(By.xpath(
-				"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
-				.doubleClick().sendKeys(excelDataObject.endDate).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
-		driver.findElement(By.xpath("//div[contains(@class,'h-btn-bottom')]")).click();
-		System.out.println(
-				"Extension done for allocation of " + excelDataObject.empName + " with " + excelDataObject.taskName);
+		try {
+			action1.moveToElement(webElement).contextClick().build().perform();
+			Thread.sleep(3000L);
+			driver.findElement(By.xpath("//a[contains(text(),'Task Information')]")).click();
+			Thread.sleep(3000L);
+			
+			driver.findElement(By.xpath("//a[contains(text(),'Allocate')]")).click();
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//div[contains(@class,'h-btn-top')]")).click();
+			Thread.sleep(3000);
+			driver.findElement(
+					By.xpath("//div[contains(@class,'slick-cell l1 r1 hasEditor')]/div[contains(text(),'"
+							+ excelDataObject.empName + "')]"))
+					.click();
+			Thread.sleep(3000);
+			action1.moveToElement(driver.findElement(By.xpath(
+					"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]")))
+					.doubleClick().sendKeys(excelDataObject.startDate).sendKeys(Keys.ENTER).build().perform();
+			Thread.sleep(3000);
+			action1.moveToElement(driver.findElement(By.xpath(
+					"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
+					.doubleClick().sendKeys(excelDataObject.endDate).sendKeys(Keys.ENTER).build().perform();
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//div[contains(@class,'h-btn-bottom')]")).click();
+			System.out.println(
+					"Extension done for allocation of " + excelDataObject.empName + " with " + excelDataObject.taskName);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 }
