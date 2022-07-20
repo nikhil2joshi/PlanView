@@ -18,14 +18,14 @@ public class NewRequirement {
 	public void addNewRequirement(WebDriver driver, Actions action1, String gcmRole) throws InterruptedException {
 
 		// Click on Requirement
-		driver.manage().window().setPosition(new Point(0, -2000));
+		driver.manage().window().setPosition(new Point(0, -3000));
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Thread.sleep(2000L);
+		Thread.sleep(3000L);
 		driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
-		Thread.sleep(2000L);
+		Thread.sleep(3000L);
 		driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
 				.click();
-		Thread.sleep(2000L);
+		Thread.sleep(3000L);
 		
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
@@ -35,11 +35,11 @@ public class NewRequirement {
 
 			String ChildWindow = iterator.next();
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
-				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -2000));
+				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
 				// driver.switchTo().window(ChildWindow).manage().window().maximize();
 
 				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
-				Thread.sleep(2000L);
+				Thread.sleep(3000L);
 
 				// Switching to the nested frames so as to reach to intended elements in HTML
 				driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
@@ -61,7 +61,7 @@ public class NewRequirement {
 				// Switch inside the frameSearchlist frame
 				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
-				Thread.sleep(2000L);
+				Thread.sleep(3000L);
 				driver.findElement(By.xpath("//a[contains(text(),'" + gcmRole + "')]")).click(); // Clicking on searched
 																									// GCMRole
 
@@ -69,10 +69,10 @@ public class NewRequirement {
 
 				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
 
-				Thread.sleep(2000L);
+				Thread.sleep(3000L);
 
 				driver.switchTo().window(mainWindowHandle);
-				driver.manage().window().setPosition(new Point(0, -2000));
+				driver.manage().window().setPosition(new Point(0, -3000));
 
 			}
 		}

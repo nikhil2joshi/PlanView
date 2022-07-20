@@ -119,7 +119,7 @@ public class PlanViewBaseClass {
 
 							Actions action1 = new Actions(driver);
 
-							driver.manage().window().setPosition(new Point(0, -2000));
+							driver.manage().window().setPosition(new Point(0, -3000));
 
 							ExcelDataObject excelDataObject = new ExcelDataObject();
 							List<ExcelDataObject> excelDataObjects2 = null;
@@ -154,7 +154,7 @@ public class PlanViewBaseClass {
 									} catch (NoSuchElementException e1) {
 
 									}
-									Thread.sleep(2000L);
+									Thread.sleep(3000L);
 
 								}
 
@@ -272,7 +272,7 @@ public class PlanViewBaseClass {
 										// wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementSelectionStateToBe(tasksToBeExtended,true)));
 										for (int k = 0; k <= 5; k++) {
 											try {
-												Thread.sleep(2000);
+												Thread.sleep(3000);
 												action1.moveToElement(tasksToBeExtended).click().build().perform();
 
 												if (tasksToBeExtended.getText().contains(excelDataObject.taskName)) {
