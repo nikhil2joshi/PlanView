@@ -151,8 +151,8 @@ public class PlanViewBaseClass {
 										action1.moveToElement(driver.findElement(By.xpath(
 												"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']")))
 												.click().build().perform();
-									} catch (NoSuchElementException e1) {
-
+									} catch (Exception e1) {
+										//Do nothing here 
 									}
 									Thread.sleep(3000L);
 
@@ -285,7 +285,7 @@ public class PlanViewBaseClass {
 												}
 												break;
 											} catch (Exception ex) {
-
+												
 											}
 										}
 									}
@@ -406,7 +406,6 @@ public class PlanViewBaseClass {
 		btnclearButton.setBackground(new Color(255, 255, 255));
 		btnclearButton.setBounds(750, 35, 100, 50);
 		panel_2.add(btnclearButton);
-
 	}
 
 	private static void updateTextArea(final String text, final JTextArea Console) {

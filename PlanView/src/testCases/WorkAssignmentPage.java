@@ -17,113 +17,100 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import testData.ExcelDataObject;
+import utilties.Utils;
 
 public class WorkAssignmentPage {
 
 	public void navigateWorkAssignmentPage(WebDriver driver, WebDriverWait wait) throws InterruptedException {
 		// TODO Auto-generated method stub
-		try {
-			
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			wait = new WebDriverWait(driver, 30);
-			WebElement clickMenuIcon = driver
-					.findElement(By.xpath("//button[@id='PVBannerTitleBarMenuButton']/span[@title='Actions']"));
-			wait.until(ExpectedConditions.elementToBeClickable(clickMenuIcon));
-			clickMenuIcon.click();
 
-			wait.until(ExpectedConditions.visibilityOfElementLocated(
-					By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]")));
-			WebElement selectWorkAssgmnt = driver
-					.findElement(By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]"));
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		wait = new WebDriverWait(driver, 30);
+		WebElement clickMenuIcon = driver
+				.findElement(By.xpath("//button[@id='PVBannerTitleBarMenuButton']/span[@title='Actions']"));
+		wait.until(ExpectedConditions.elementToBeClickable(clickMenuIcon));
+		clickMenuIcon.click();
 
-			selectWorkAssgmnt.click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]")));
+		WebElement selectWorkAssgmnt = driver
+				.findElement(By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]"));
 
-			Thread.sleep(5000L);
-			wait.until(ExpectedConditions.elementToBeClickable(
-					By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']")));
-			Thread.sleep(3000L);
-			WebElement selectSchedule = driver.findElement(
-					By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']"));
+		Utils.clickOn(driver, selectWorkAssgmnt);
 
-			selectSchedule.click();
-			Thread.sleep(3000L);
+		
+		WebElement selectSchedule = driver.findElement(
+				By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']"));
+		Utils.clickOn(driver, selectSchedule);	
 
-			WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem2']"));
-			wait.until(ExpectedConditions.elementToBeClickable(scheduleDropdown));
-			scheduleDropdown.click();
-			Thread.sleep(3000L);
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem2']"));
+		Utils.clickOn(driver, scheduleDropdown);
 		
 
 	}
 
 	public void addWBSElement(WebDriver driver, Actions action1, String WBSCode) throws InterruptedException {
 
-		try {
-			WebElement webElementWBSCode = null;
-			driver.manage().window().setPosition(new Point(0, -3000));
-			Thread.sleep(3000);
-			webElementWBSCode = driver.findElement(By.xpath(
-					"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]"));
+		WebElement webElementWBSCode = null;
+		driver.manage().window().setPosition(new Point(0, -3000));
+		Thread.sleep(3000);
+		webElementWBSCode = driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]"));
 
-			Thread.sleep(2000);
-			action1.moveToElement(webElementWBSCode).doubleClick().sendKeys(WBSCode).sendKeys(Keys.ENTER).build().perform();
+		Thread.sleep(2000);
 
-			Thread.sleep(3000);
+		action1.moveToElement(webElementWBSCode).doubleClick().sendKeys(WBSCode).sendKeys(Keys.ENTER).build().perform();
 
-			driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']")).click();
+		Thread.sleep(3000);
 
-			Thread.sleep(3000);
+		driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']")).click();
 
-			String mainWindowHandle = driver.getWindowHandle();
-			Set<String> allWindowHandles = driver.getWindowHandles();
+		Thread.sleep(3000);
 
-			Iterator<String> iterator = allWindowHandles.iterator();
+		String mainWindowHandle = driver.getWindowHandle();
+		Set<String> allWindowHandles = driver.getWindowHandles();
 
-			while (iterator.hasNext()) {
+		Iterator<String> iterator = allWindowHandles.iterator();
 
-				String ChildWindow = iterator.next();
-				if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
-					driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
+		while (iterator.hasNext()) {
 
-					// driver.switchTo().window(ChildWindow).manage().window().maximize();
+			String ChildWindow = iterator.next();
+			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
+				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
 
-					Thread.sleep(3000);
-					driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
+				// driver.switchTo().window(ChildWindow).manage().window().maximize();
 
-					driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
-					driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
+				Thread.sleep(3000);
+				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
 
-					driver.findElement(By.id("attribute_description")).sendKeys(WBSCode); // Click on Description textbox
-																							// and send EmpName
-					Thread.sleep(3000);
-					WebElement searchButton;
-					searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
-					searchButton.click();
+				driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
+				driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
 
-					driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
+				driver.findElement(By.id("attribute_description")).sendKeys(WBSCode); // Click on Description
+																						// textbox
+																						// and send EmpName
+				Thread.sleep(3000);
+				WebElement searchButton;
+				searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
+				searchButton.click();
 
-					driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
+				driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
 
-					Thread.sleep(3000L);
-					// Clicking on searched GCMRole
-					WebElement wbsCode = driver.findElement(By.xpath("//a[contains(text(),'" + WBSCode + "')]"));
-					Thread.sleep(3000L);
-					wbsCode.click();
+				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
-					driver.switchTo().defaultContent();
-					driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
+				Thread.sleep(3000L);
+				// Clicking on searched GCMRole
+				WebElement wbsCode = driver.findElement(By.xpath("//a[contains(text(),'" + WBSCode + "')]"));
+				Thread.sleep(3000L);
+				wbsCode.click();
 
-					driver.switchTo().window(mainWindowHandle);
-					driver.manage().window().setPosition(new Point(0, -3000));
+				driver.switchTo().defaultContent();
+				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
 
-				}
+				driver.switchTo().window(mainWindowHandle);
+				driver.manage().window().setPosition(new Point(0, -3000));
+
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
 		}
 
 	}
@@ -134,45 +121,31 @@ public class WorkAssignmentPage {
 		// TODO Auto-generated method stub
 		try {
 
-			action1.moveToElement(driver.findElement(By.xpath(
-					"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']")))
-					.click().build().perform();
+			WebElement dockRightIcon = driver.findElement(By.xpath(
+					"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']"));
+			Utils.singleclickOnElementbyActions(driver, dockRightIcon, action1);
 		} catch (Exception e) {
 			// do nothing and proceed further
 		}
 		Thread.sleep(3000L);
-		try {
-			driver.findElement(By.xpath(
-					"//div[@class='tray-content-widget__content tray-content-widget__right-content']/div[@class='pvFilter form-field']/span[contains(@class,'clear icon icon')]"))
-					.click();
-		} catch (Exception e) {
-			System.out.println("Clear icon not found while adding task " + excelDataobject.taskName);
-		}
 
-		action1.moveToElement(driver.findElement(By.xpath("//button[@title='collapse: click to hide child rows']")))
-				.click().build().perform();
+		WebElement hideChildRows = driver
+				.findElement(By.xpath("//button[@title='collapse: click to hide child rows']"));
+		Utils.singleclickOnElementbyActions(driver, hideChildRows, action1);
 
-		for (int k = 0; k <= 5; k++) {
-			try {
-				WebElement clickProjectMenuoption = driver.findElement(By.xpath("//span[contains(@title,'Project')]"));
+		WebElement clickProjectMenuoption = driver.findElement(By.xpath("//span[contains(@title,'Project')]"));
 
-				action1.moveToElement(clickProjectMenuoption).contextClick().build().perform();
-				Thread.sleep(3000L);
-				break;
-			} catch (Exception exp) {
-				System.out.println("");
-			}
-		}
+		Utils.rightClickOnElementbyActions(driver, clickProjectMenuoption, action1);
 
 		WebElement selectInserUnder = driver.findElement(By.xpath("//span[@class='pv12FastTrackInsertUnder']/span[1]"));
-		selectInserUnder.click();
-		Thread.sleep(3000L);
+		Utils.clickOn(driver, selectInserUnder);
 
 		action1.moveToElement(
 				driver.findElement(By.xpath("//span[@class='grid-drag-handle icon icon5x13 sm-vertical-ellipses']")))
 				.doubleClick().sendKeys(excelDataobject.taskName).sendKeys(Keys.ENTER).build().perform();
 		WebElement currentSeqIdWebElement = driver.findElement(By.xpath(
 				"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')][contains(@class,'selected')]/div[@style='overflow: hidden; text-align: left;']"));
+		Utils.clickOn(driver, currentSeqIdWebElement);
 		String currentSeqID = currentSeqIdWebElement.getAttribute("title");
 
 		excelDataobject.sequenceID = currentSeqID;
@@ -191,35 +164,31 @@ public class WorkAssignmentPage {
 				.doubleClick().sendKeys(excelDataobject.endDate).sendKeys(Keys.ENTER).build().perform();
 		Thread.sleep(3000L);
 
-		action1.moveToElement(driver.findElement(By.xpath(
-				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l9 r9 hasEditor')][contains(@class,'selected')]")))
-				.doubleClick().build().perform();
-		action1.moveToElement(driver.findElement(By.xpath(
-				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l9 r9 hasEditor')][contains(@class,'selected')]")))
-				.doubleClick().build().perform();
-		Thread.sleep(3000L);
+		WebElement ContraintType = driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l9 r9 hasEditor')][contains(@class,'selected')]"));
+		Utils.doubleClickOnElementbyActions(driver, ContraintType, action1);
+		Utils.doubleClickOnElementbyActions(driver, ContraintType, action1);
+		// Thread.sleep(3000L);
 
-		Select constraintType = new Select(driver.findElement(By.xpath("//select[@class='editor-pick']")));
-		constraintType.selectByIndex(0);
+		Select constraintTypeDropDown = new Select(driver.findElement(By.xpath("//select[@class='editor-pick']")));
+		constraintTypeDropDown.selectByIndex(0);
 
-		Thread.sleep(3000L);
 		action1.moveToElement(driver.findElement(By.xpath(
-				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
-				.doubleClick().build().perform();
+                "//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
+                .doubleClick().build().perform();
 
-		Thread.sleep(3000L);
-		action1.moveToElement(driver.findElement(By.xpath(
-				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
-				.doubleClick().build().perform();
-
+        Thread.sleep(3000L);
+        action1.moveToElement(driver.findElement(By.xpath(
+                "//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
+                .doubleClick().build().perform();
+        
 		// Send Allocation to SAP
 		Select send2SAP = new Select(driver.findElement(By.xpath("//select[@class='editor-scode']")));
-		Thread.sleep(3000L);
+		Thread.sleep(2000L);
 		send2SAP.selectByVisibleText("Yes");
-		Thread.sleep(3000L);
 
 		WebElement taskWebElement = driver.findElement(By.xpath("//div[@title='" + excelDataobject.sequenceID + "']"));
-		action1.moveToElement(taskWebElement).contextClick().build().perform();
+		Utils.rightClickOnElementbyActions(driver, taskWebElement, action1);
 
 		Thread.sleep(3000L);
 		driver.findElement(By.xpath("//a[contains(text(),'Task Information')]")).click();

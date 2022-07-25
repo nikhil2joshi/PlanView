@@ -18,7 +18,7 @@ public class NewRequirement {
 	public void addNewRequirement(WebDriver driver, Actions action1, String gcmRole) throws InterruptedException {
 
 		// Click on Requirement
-		try {
+		
 			driver.manage().window().setPosition(new Point(0, -3000));
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			Thread.sleep(3000L);
@@ -78,9 +78,7 @@ public class NewRequirement {
 				}
 			}
 
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+		
 	}
 
 }
