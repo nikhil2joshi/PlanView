@@ -38,14 +38,12 @@ public class WorkAssignmentPage {
 
 		Utils.clickOn(driver, selectWorkAssgmnt);
 
-		
 		WebElement selectSchedule = driver.findElement(
 				By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']"));
-		Utils.clickOn(driver, selectSchedule);	
+		Utils.clickOn(driver, selectSchedule);
 
 		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem2']"));
 		Utils.clickOn(driver, scheduleDropdown);
-		
 
 	}
 
@@ -136,13 +134,14 @@ public class WorkAssignmentPage {
 		WebElement clickProjectMenuoption = driver.findElement(By.xpath("//span[contains(@title,'Project')]"));
 
 		Utils.rightClickOnElementbyActions(driver, clickProjectMenuoption, action1);
-
+		Thread.sleep(3000L);
 		WebElement selectInserUnder = driver.findElement(By.xpath("//span[@class='pv12FastTrackInsertUnder']/span[1]"));
 		Utils.clickOn(driver, selectInserUnder);
-
-		action1.moveToElement(
-				driver.findElement(By.xpath("//span[@class='grid-drag-handle icon icon5x13 sm-vertical-ellipses']")))
+		//Thread.sleep(3000L);
+		action1.moveToElement(driver.findElement(By
+				.xpath("//span[@class='grid-drag-handle icon icon5x13 sm-vertical-ellipses']")))
 				.doubleClick().sendKeys(excelDataobject.taskName).sendKeys(Keys.ENTER).build().perform();
+		Thread.sleep(3000L);
 		WebElement currentSeqIdWebElement = driver.findElement(By.xpath(
 				"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')][contains(@class,'selected')]/div[@style='overflow: hidden; text-align: left;']"));
 		Utils.clickOn(driver, currentSeqIdWebElement);
@@ -174,14 +173,14 @@ public class WorkAssignmentPage {
 		constraintTypeDropDown.selectByIndex(0);
 
 		action1.moveToElement(driver.findElement(By.xpath(
-                "//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
-                .doubleClick().build().perform();
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().build().perform();
 
-        Thread.sleep(3000L);
-        action1.moveToElement(driver.findElement(By.xpath(
-                "//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
-                .doubleClick().build().perform();
-        
+		Thread.sleep(3000L);
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l5 r5 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().build().perform();
+
 		// Send Allocation to SAP
 		Select send2SAP = new Select(driver.findElement(By.xpath("//select[@class='editor-scode']")));
 		Thread.sleep(2000L);
