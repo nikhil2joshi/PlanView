@@ -26,20 +26,14 @@ public class WorkAssignmentPage {
 		wait = new WebDriverWait(driver, 30);
 		WebElement clickMenuIcon = driver
 				.findElement(By.xpath("//button[@id='PVBannerTitleBarMenuButton']/span[@title='Actions']"));
-		wait.until(ExpectedConditions.elementToBeClickable(clickMenuIcon));
-		clickMenuIcon.click();
-
-		wait.until(ExpectedConditions.visibilityOfElementLocated(
-				By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]")));
+		Utils.clickOn(driver, clickMenuIcon);
 		WebElement selectWorkAssgmnt = driver
 				.findElement(By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]"));
 
 		Utils.clickOn(driver, selectWorkAssgmnt);
-
 		WebElement selectSchedule = driver.findElement(
 				By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']"));
 		Utils.clickOn(driver, selectSchedule);
-
 		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem2']"));
 		Utils.clickOn(driver, scheduleDropdown);
 
@@ -47,22 +41,12 @@ public class WorkAssignmentPage {
 
 	public void addWBSElement(WebDriver driver, Actions action1, String WBSCode) throws InterruptedException {
 
-		WebElement webElementWBSCode = null;
 		driver.manage().window().setPosition(new Point(0, -3000));
-		Thread.sleep(3000);
-		webElementWBSCode = driver.findElement(By.xpath(
-				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]"));
+		
 
-		Thread.sleep(2000);
-
-		action1.moveToElement(webElementWBSCode).doubleClick().sendKeys(WBSCode).sendKeys(Keys.ENTER).build().perform();
-
-		Thread.sleep(3000);
-
-		driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']")).click();
-
-		Thread.sleep(3000);
-
+		WebElement viewDataPicker = driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']"));
+		Utils.clickOn(driver, viewDataPicker);
+		
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
 
@@ -76,8 +60,8 @@ public class WorkAssignmentPage {
 
 				// driver.switchTo().window(ChildWindow).manage().window().maximize();
 
-				Thread.sleep(3000);
-				driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
+				WebElement search = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
+				Utils.clickOn(driver, search);
 
 				driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
 				driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
@@ -94,14 +78,14 @@ public class WorkAssignmentPage {
 
 				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
-				Thread.sleep(3000L);
 				// Clicking on searched GCMRole
 				WebElement wbsCode = driver.findElement(By.xpath("//a[contains(text(),'" + WBSCode + "')]"));
-				Thread.sleep(3000L);
-				wbsCode.click();
-
+				Utils.clickOn(driver, wbsCode);
+				
 				driver.switchTo().defaultContent();
-				driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
+				
+				WebElement oKButton = driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']"))
+				Utils.clickOn(driver, oKButton);;		
 
 				driver.switchTo().window(mainWindowHandle);
 				driver.manage().window().setPosition(new Point(0, -3000));

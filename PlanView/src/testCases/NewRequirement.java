@@ -11,6 +11,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import utilties.Utils;
+
 public class NewRequirement {
 
 	WebElement assignmentsubmenuoption;
@@ -22,12 +24,13 @@ public class NewRequirement {
 			driver.manage().window().setPosition(new Point(0, -3000));
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			Thread.sleep(3000L);
-			driver.findElement(By.xpath("//a[contains(text(),'Require')]")).click();
-			Thread.sleep(3000L);
-			driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
-					.click();
-			Thread.sleep(3000L);
+			WebElement require = driver.findElement(By.xpath("//a[contains(text(),'Require')]"));
+			Utils.clickOn(driver, require);
 			
+			WebElement Requirement = driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
+			Utils.clickOn(driver, Requirement);
+
+
 			String mainWindowHandle = driver.getWindowHandle();
 			Set<String> allWindowHandles = driver.getWindowHandles();
 			Iterator<String> iterator = allWindowHandles.iterator();
@@ -37,11 +40,10 @@ public class NewRequirement {
 				String ChildWindow = iterator.next();
 				if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
 					driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
-					// driver.switchTo().window(ChildWindow).manage().window().maximize();
-
-					driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click();
-					Thread.sleep(3000L);
-
+					
+					WebElement searchButton = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
+					Utils.clickOn(driver, Requirement);
+					
 					// Switching to the nested frames so as to reach to intended elements in HTML
 					driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
 					driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
@@ -62,23 +64,19 @@ public class NewRequirement {
 					// Switch inside the frameSearchlist frame
 					driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
-					Thread.sleep(3000L);
-					driver.findElement(By.xpath("//a[contains(text(),'" + gcmRole + "')]")).click(); // Clicking on searched
-																										// GCMRole
+					
+					WebElement SearchedGCMRole = driver.findElement(By.xpath("//a[contains(text(),'" + gcmRole + "')]"));
+							Utils.clickOn(driver, SearchedGCMRole); // Clicking on searched GCMRole
 
 					driver.switchTo().defaultContent();
 
-					driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']")).click();
-
-					Thread.sleep(3000L);
+					WebElement OkButton = driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']"));
+					Utils.clickOn(driver,OkButton);
 
 					driver.switchTo().window(mainWindowHandle);
 					driver.manage().window().setPosition(new Point(0, -3000));
-
 				}
-			}
-
-		
+			}		
 	}
 
 }
