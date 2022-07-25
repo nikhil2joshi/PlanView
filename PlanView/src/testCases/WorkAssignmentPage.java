@@ -1,5 +1,6 @@
 package testCases;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import testData.ExcelDataObject;
 import utilties.Utils;
 
@@ -135,9 +137,9 @@ public class WorkAssignmentPage {
 		Thread.sleep(3000L);
 		WebElement selectInserUnder = driver.findElement(By.xpath("//span[@class='pv12FastTrackInsertUnder']/span[1]"));
 		Utils.clickOn(driver, selectInserUnder);
-		// Thread.sleep(3000L);
-		action1.moveToElement(
-				driver.findElement(By.xpath("//span[@class='grid-drag-handle icon icon5x13 sm-vertical-ellipses']")))
+		//Thread.sleep(3000L);
+		action1.moveToElement(driver.findElement(By
+				.xpath("//span[@class='grid-drag-handle icon icon5x13 sm-vertical-ellipses']")))
 				.doubleClick().sendKeys(excelDataobject.taskName).sendKeys(Keys.ENTER).build().perform();
 		Thread.sleep(3000L);
 		WebElement currentSeqIdWebElement = driver.findElement(By.xpath(
