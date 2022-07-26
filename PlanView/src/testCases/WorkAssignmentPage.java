@@ -19,7 +19,8 @@ import utilties.Utils;
 
 public class WorkAssignmentPage {
 
-	public void navigateWorkAssignmentPage(WebDriver driver, WebDriverWait wait) throws InterruptedException {
+	public void navigateWorkAssignmentPage(WebDriver driver, Actions action1, WebDriverWait wait)
+			throws InterruptedException {
 		// TODO Auto-generated method stub
 
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -31,22 +32,27 @@ public class WorkAssignmentPage {
 				.findElement(By.xpath("//span[@class='bannerMenuItemText'][contains(text(),'Work and Assignments')]"));
 
 		Utils.clickOn(driver, selectWorkAssgmnt);
+		Thread.sleep(3000L);
 		WebElement selectSchedule = driver.findElement(
 				By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']"));
-		Utils.clickOn(driver, selectSchedule);
+		Utils.clickElementByJS(selectSchedule, driver);
+		Thread.sleep(3000L);
 		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem2']"));
-		Utils.clickOn(driver, scheduleDropdown);
+		Utils.clickElementByJS(scheduleDropdown, driver);
 
 	}
 
 	public void addWBSElement(WebDriver driver, Actions action1, String WBSCode) throws InterruptedException {
 
 		driver.manage().window().setPosition(new Point(0, -3000));
-		
+		WebElement webElementWBSCode = driver.findElement(By.xpath(
+				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]"));
 
-		WebElement viewDataPicker = driver.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']"));
+		Utils.doubleClickOnElementbyActions(driver, webElementWBSCode, action1);
+		WebElement viewDataPicker = driver
+				.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']"));
 		Utils.clickOn(driver, viewDataPicker);
-		
+
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
 
@@ -81,11 +87,12 @@ public class WorkAssignmentPage {
 				// Clicking on searched GCMRole
 				WebElement wbsCode = driver.findElement(By.xpath("//a[contains(text(),'" + WBSCode + "')]"));
 				Utils.clickOn(driver, wbsCode);
-				
+
 				driver.switchTo().defaultContent();
-				
-				WebElement oKButton = driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']"))
-				Utils.clickOn(driver, oKButton);;		
+
+				WebElement oKButton = driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']"));
+				Utils.clickOn(driver, oKButton);
+				;
 
 				driver.switchTo().window(mainWindowHandle);
 				driver.manage().window().setPosition(new Point(0, -3000));
@@ -112,18 +119,20 @@ public class WorkAssignmentPage {
 		WebElement hideChildRows = driver
 				.findElement(By.xpath("//button[@title='collapse: click to hide child rows']"));
 		Utils.singleclickOnElementbyActions(driver, hideChildRows, action1);
-
-		WebElement clickProjectMenuoption = driver.findElement(By.xpath("//span[contains(@title,'Project')]"));
-
-		Utils.rightClickOnElementbyActions(driver, clickProjectMenuoption, action1);
-		Thread.sleep(3000L);
-		WebElement selectInserUnder = driver.findElement(By.xpath("//span[@class='pv12FastTrackInsertUnder']/span[1]"));
-		Utils.clickOn(driver, selectInserUnder);
-		// Thread.sleep(3000L);
+		Thread.sleep(2000L);
+		WebElement clickProjectMenuoption = driver
+				.findElement(By.xpath("//div[@class='ActionLinkButton']/span[1]/span[1]"));
+		Thread.sleep(2000L);
+		Utils.singleclickOnElementbyActions(driver, clickProjectMenuoption, action1);
+		Thread.sleep(2000L);
+		WebElement selectInserUnder = driver
+				.findElement(By.xpath("//span[@class='pv12FastTrackInsertUnder']/span[@class='icon12']"));
+		Utils.singleclickOnElementbyActions(driver, selectInserUnder, action1);
+		Thread.sleep(2000L);
 		action1.moveToElement(
 				driver.findElement(By.xpath("//span[@class='grid-drag-handle icon icon5x13 sm-vertical-ellipses']")))
 				.doubleClick().sendKeys(excelDataobject.taskName).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000L);
+		Thread.sleep(2000L);
 		WebElement currentSeqIdWebElement = driver.findElement(By.xpath(
 				"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')][contains(@class,'selected')]/div[@style='overflow: hidden; text-align: left;']"));
 		Utils.clickOn(driver, currentSeqIdWebElement);

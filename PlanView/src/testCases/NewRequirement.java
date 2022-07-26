@@ -27,10 +27,10 @@ public class NewRequirement {
 			WebElement require = driver.findElement(By.xpath("//a[contains(text(),'Require')]"));
 			Utils.clickOn(driver, require);
 			
-			WebElement Requirement = driver.findElement(By.xpath("//span[normalize-space(text())='Requirement' and @class='add-line-text']"))
+			WebElement Requirement = driver.findElement(By.xpath("//span[contains(text(),'Requirement')][@class='add-line-text']"));
 			Utils.clickOn(driver, Requirement);
 
-
+			Thread.sleep(3000L);
 			String mainWindowHandle = driver.getWindowHandle();
 			Set<String> allWindowHandles = driver.getWindowHandles();
 			Iterator<String> iterator = allWindowHandles.iterator();

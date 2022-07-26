@@ -142,7 +142,7 @@ public class PlanViewBaseClass {
 									SearchProject obj1 = new SearchProject();
 									obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
 									currentProjectName = excelDataObject.projectName;
-									workAssignmentPage.navigateWorkAssignmentPage(driver, wait);
+									workAssignmentPage.navigateWorkAssignmentPage(driver, action1, wait);
 									excelDataObject = (ExcelDataObject) iterator.next();
 									currentTaskName = excelDataObject.taskName;
 
@@ -152,7 +152,7 @@ public class PlanViewBaseClass {
 												"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']")))
 												.click().build().perform();
 									} catch (Exception e1) {
-										//Do nothing here 
+										// Do nothing here
 									}
 									Thread.sleep(3000L);
 
@@ -285,7 +285,7 @@ public class PlanViewBaseClass {
 												}
 												break;
 											} catch (Exception ex) {
-												
+
 											}
 										}
 									}

@@ -75,7 +75,7 @@ public class AddAllocation {
 					Utils.clickOn(driver, OkButton);
 
 					driver.switchTo().window(mainWindowHandle);
-
+					Thread.sleep(3000L);
 					driver.manage().window().setPosition(new Point(0, -3000));
 
 					WebElement allocate = driver.findElement(By.xpath("//a[contains(text(),'Allocate')]"));

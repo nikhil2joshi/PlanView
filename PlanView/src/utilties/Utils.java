@@ -16,13 +16,12 @@ public class Utils {
 		int i = 0;
 		for (; i < 5; i++) {
 			try {
-
 				element.click();
+				System.out.println("Worked on first click " + element);
 				break;
-
 			} catch (Exception e) {
 				Thread.sleep(2000);
-				//System.out.println("Inside wait for "+i + " " + element.getTagName());
+				System.out.println("Inside normal wait for " + i + " " + element);
 				if (i == 5) {
 					throw e;
 				}
@@ -39,10 +38,13 @@ public class Utils {
 
 				JavascriptExecutor js = ((JavascriptExecutor) driver);
 				js.executeScript("arguments[0].click();", element);
+				System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
 				Thread.sleep(2000);
+				System.out.println("Inside JS wait for " + i + " " + element);
+
 				if (i == 5) {
 					throw e;
 				}
@@ -60,10 +62,13 @@ public class Utils {
 			try {
 
 				action1.moveToElement(element).click().build().perform();
+				System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
 				Thread.sleep(2000);
+				System.out.println("Inside Single click wait for " + i + " " + element);
+
 				if (i == 5) {
 					throw e;
 				}
@@ -78,17 +83,20 @@ public class Utils {
 		for (; i < 5; i++) {
 			try {
 				action1.moveToElement(element).contextClick().build().perform();
+				System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
 				Thread.sleep(2000);
+				System.out.println("Inside rightClick wait for " + i + " " + element);
+
 				if (i == 5) {
 					throw e;
 				}
 			}
 		}
 	}
-	
+
 	public static void doubleClickOnElementbyActions(WebDriver driver, WebElement element, Actions action1)
 			throws InterruptedException {
 
@@ -96,10 +104,13 @@ public class Utils {
 		for (; i < 5; i++) {
 			try {
 				action1.moveToElement(element).doubleClick().build().perform();
+				System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
 				Thread.sleep(2000);
+				System.out.println("Inside DoubleClick wait for " + i + " " + element);
+
 				if (i == 5) {
 					throw e;
 				}
