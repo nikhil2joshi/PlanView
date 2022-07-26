@@ -41,8 +41,8 @@ public class NewRequirement {
 				if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
 					driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
 					
-					WebElement searchButton = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
-					Utils.clickOn(driver, Requirement);
+					WebElement searchOption = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
+					Utils.clickOn(driver, searchOption);
 					
 					// Switching to the nested frames so as to reach to intended elements in HTML
 					driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
@@ -52,7 +52,9 @@ public class NewRequirement {
 							.findElement(By.xpath("//label[contains(text(),'Description')]/following-sibling::input[1]"));
 					searchGCMrole.sendKeys(gcmRole);
 
-					driver.findElement(By.xpath("//input[@id='_search']")).click(); // click on search button
+					WebElement searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
+					Utils.clickOn(driver, searchButton);
+					// click on search button
 					driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
 
 					/*
@@ -66,7 +68,7 @@ public class NewRequirement {
 
 					
 					WebElement SearchedGCMRole = driver.findElement(By.xpath("//a[contains(text(),'" + gcmRole + "')]"));
-							Utils.clickOn(driver, SearchedGCMRole); // Clicking on searched GCMRole
+					Utils.clickOn(driver, SearchedGCMRole); // Clicking on searched GCMRole
 
 					driver.switchTo().defaultContent();
 

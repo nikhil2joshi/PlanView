@@ -8,7 +8,10 @@ import java.awt.Insets;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -50,13 +53,13 @@ import java.awt.Color;
 public class PlanViewBaseClass {
 	public static List<ExcelDataObject> excelDataObjects;
 	public static ChromeOptions options;
+	public static int globalWait;
 	static {
-
 		String path = System.getProperty("user.dir");
 		System.setProperty("webdriver.chrome.driver", path + "\\chromedriver.exe");
 		System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
-
 	}
+	
 	private static JFrame frame;
 	private static JButton btnstartButton, btnSelectFile, btnclearButton;
 	private static JTabbedPane tabbedPane;
@@ -101,6 +104,21 @@ public class PlanViewBaseClass {
 				btnstartButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String currentProjectName = null;
+						String pathOfConfigFile = System.getProperty("user.dir") + "\\Config.txt";
+						// pathOfConfigFile + "\\config.txt");
+						File file = new File(pathOfConfigFile);
+						try {
+							BufferedReader br = new BufferedReader(new FileReader(file));
+							String str = br.readLine();
+							String s[] = str.split("=", 0);
+							globalWait = (Integer.parseInt(s[1]))/2;
+						} catch (FileNotFoundException e3) {
+							// TODO Auto-generated catch block
+							System.out.println("Configuration file not found");
+						} catch (IOException e1) {
+							System.out.println("I/O Exception while accessing config file");
+
+						}
 						options = new ChromeOptions();
 						// options.addArguments("--headless");
 						textArea_Console.setText(null);

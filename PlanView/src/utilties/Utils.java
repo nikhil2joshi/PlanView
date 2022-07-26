@@ -8,13 +8,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import testCases.PlanViewBaseClass;
+
 public class Utils {
 
 	// Perform Click Operation
 	public static void clickOn(WebDriver driver, WebElement element) throws InterruptedException {
 
 		int i = 0;
-		for (; i < 5; i++) {
+		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
 				element.click();
 				System.out.println("Worked on first click " + element);
@@ -33,7 +35,7 @@ public class Utils {
 	public static void clickElementByJS(WebElement element, WebDriver driver) throws InterruptedException {
 
 		int i = 0;
-		for (; i < 5; i++) {
+		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
 
 				JavascriptExecutor js = ((JavascriptExecutor) driver);
@@ -58,7 +60,7 @@ public class Utils {
 			throws InterruptedException {
 
 		int i = 0;
-		for (; i < 5; i++) {
+		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
 
 				action1.moveToElement(element).click().build().perform();
@@ -80,7 +82,7 @@ public class Utils {
 			throws InterruptedException {
 
 		int i = 0;
-		for (; i < 5; i++) {
+		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
 				action1.moveToElement(element).contextClick().build().perform();
 				System.out.println("Worked on first click " + element);
@@ -101,7 +103,7 @@ public class Utils {
 			throws InterruptedException {
 
 		int i = 0;
-		for (; i < 5; i++) {
+		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
 				action1.moveToElement(element).doubleClick().build().perform();
 				System.out.println("Worked on first click " + element);
