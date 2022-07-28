@@ -1,10 +1,9 @@
 package testCases;
 
+import java.time.Duration;
 import java.util.Iterator;
 
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
@@ -21,8 +20,9 @@ public class NewRequirement {
 
 		// Click on Requirement
 		
-			driver.manage().window().setPosition(new Point(0, -3000));
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			//driver.manage().window().setPosition(new Point(0, -3000));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+			
 			Thread.sleep(3000L);
 			WebElement require = driver.findElement(By.xpath("//a[contains(text(),'Require')]"));
 			Utils.clickOn(driver, require);
@@ -39,8 +39,8 @@ public class NewRequirement {
 
 				String ChildWindow = iterator.next();
 				if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
-					driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
-					
+					//driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
+					driver.switchTo().window(ChildWindow).manage().window().maximize();
 					WebElement searchOption = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
 					Utils.clickOn(driver, searchOption);
 					
@@ -76,7 +76,7 @@ public class NewRequirement {
 					Utils.clickOn(driver,OkButton);
 
 					driver.switchTo().window(mainWindowHandle);
-					driver.manage().window().setPosition(new Point(0, -3000));
+					//driver.manage().window().setPosition(new Point(0, -3000));
 				}
 			}		
 	}

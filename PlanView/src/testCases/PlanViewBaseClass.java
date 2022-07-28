@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -15,10 +14,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -32,16 +30,15 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeDriverService;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import testData.ExcelDataObject;
@@ -56,10 +53,10 @@ public class PlanViewBaseClass {
 	public static int globalWait;
 	static {
 		String path = System.getProperty("user.dir");
-		System.setProperty("webdriver.chrome.driver", path + "\\chromedriver.exe");
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
+		System.setProperty("webdriver.chrome.driver", path + "\\msedgedriver.exe");
+		System.setProperty(EdgeDriverService.EDGE_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
 	}
-	
+
 	private static JFrame frame;
 	private static JButton btnstartButton, btnSelectFile, btnclearButton;
 	private static JTabbedPane tabbedPane;
@@ -83,7 +80,7 @@ public class PlanViewBaseClass {
 
 				btnSelectFile.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-
+						redirectSystemStreams(textArea_Console);
 						String flag = e.getActionCommand();
 						if (flag.equals("Select File")) {
 							fileChooser = new JFileChooser();
@@ -111,7 +108,7 @@ public class PlanViewBaseClass {
 							BufferedReader br = new BufferedReader(new FileReader(file));
 							String str = br.readLine();
 							String s[] = str.split("=", 0);
-							globalWait = (Integer.parseInt(s[1]))/2;
+							globalWait = (Integer.parseInt(s[1])) / 2;
 						} catch (FileNotFoundException e3) {
 							// TODO Auto-generated catch block
 							System.out.println("Configuration file not found");
@@ -119,15 +116,17 @@ public class PlanViewBaseClass {
 							System.out.println("I/O Exception while accessing config file");
 
 						}
-						options = new ChromeOptions();
+						//options = new Options();
 						// options.addArguments("--headless");
 						textArea_Console.setText(null);
-						WebDriver driver = new ChromeDriver(options);
+						WebDriver driver = new EdgeDriver();
 						try {
 							redirectSystemStreams(textArea_Console);
 
-							driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-							WebDriverWait wait = new WebDriverWait(driver, 10);
+							driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+							driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
+							driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+							WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 							// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 							driver.get("https://worldline.pvcloud.com/");
 							driver.manage().window().maximize();
@@ -137,7 +136,7 @@ public class PlanViewBaseClass {
 
 							Actions action1 = new Actions(driver);
 
-							driver.manage().window().setPosition(new Point(0, -3000));
+							// driver.manage().window().setPosition(new Point(0, -3000));
 
 							ExcelDataObject excelDataObject = new ExcelDataObject();
 							List<ExcelDataObject> excelDataObjects2 = null;
@@ -413,6 +412,7 @@ public class PlanViewBaseClass {
 		btnclearButton = new JButton("Clear");
 		btnclearButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				redirectSystemStreams(textArea_Console);
 				textArea_Console.setText(null);
 				filePath.setText("Please select file path ....");
 				btnstartButton.setEnabled(false);

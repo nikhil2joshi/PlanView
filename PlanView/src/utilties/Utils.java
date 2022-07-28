@@ -1,12 +1,9 @@
 package utilties;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import testCases.PlanViewBaseClass;
 
@@ -18,12 +15,13 @@ public class Utils {
 		int i = 0;
 		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
+				Thread.sleep(2000);
 				element.click();
-				System.out.println("Worked on first click " + element);
+				// System.out.println("Worked on first click " + element);
 				break;
 			} catch (Exception e) {
-				Thread.sleep(2000);
-				System.out.println("Inside normal wait for " + i + " " + element);
+
+				// System.out.println("Inside normal wait for " + i + " " + element);
 				if (i == 5) {
 					throw e;
 				}
@@ -37,15 +35,15 @@ public class Utils {
 		int i = 0;
 		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
-
+				Thread.sleep(2000);
 				JavascriptExecutor js = ((JavascriptExecutor) driver);
 				js.executeScript("arguments[0].click();", element);
-				System.out.println("Worked on first click " + element);
+				// System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
-				Thread.sleep(2000);
-				System.out.println("Inside JS wait for " + i + " " + element);
+
+				// System.out.println("Inside JS wait for " + i + " " + element);
 
 				if (i == 5) {
 					throw e;
@@ -62,14 +60,14 @@ public class Utils {
 		int i = 0;
 		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
-
+				Thread.sleep(2000);
 				action1.moveToElement(element).click().build().perform();
-				System.out.println("Worked on first click " + element);
+				// System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
-				Thread.sleep(2000);
-				System.out.println("Inside Single click wait for " + i + " " + element);
+				// Thread.sleep(2000);
+				// System.out.println("Inside Single click wait for " + i + " " + element);
 
 				if (i == 5) {
 					throw e;
@@ -84,13 +82,14 @@ public class Utils {
 		int i = 0;
 		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
+				Thread.sleep(2000);
 				action1.moveToElement(element).contextClick().build().perform();
-				System.out.println("Worked on first click " + element);
+				// System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
-				Thread.sleep(2000);
-				System.out.println("Inside rightClick wait for " + i + " " + element);
+				// Thread.sleep(2000);
+				// System.out.println("Inside rightClick wait for " + i + " " + element);
 
 				if (i == 5) {
 					throw e;
@@ -105,13 +104,14 @@ public class Utils {
 		int i = 0;
 		for (; i < PlanViewBaseClass.globalWait; i++) {
 			try {
+				Thread.sleep(2000);
 				action1.moveToElement(element).doubleClick().build().perform();
-				System.out.println("Worked on first click " + element);
+				// System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
-				Thread.sleep(2000);
-				System.out.println("Inside DoubleClick wait for " + i + " " + element);
+				// Thread.sleep(2000);
+				// System.out.println("Inside DoubleClick wait for " + i + " " + element);
 
 				if (i == 5) {
 					throw e;

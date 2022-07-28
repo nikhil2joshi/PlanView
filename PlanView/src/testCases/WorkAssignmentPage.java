@@ -1,11 +1,12 @@
 package testCases;
 
 import org.openqa.selenium.Point;
+
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -23,8 +24,8 @@ public class WorkAssignmentPage {
 			throws InterruptedException {
 		// TODO Auto-generated method stub
 
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		wait = new WebDriverWait(driver, 30);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 		WebElement clickMenuIcon = driver
 				.findElement(By.xpath("//button[@id='PVBannerTitleBarMenuButton']/span[@title='Actions']"));
 		Utils.clickOn(driver, clickMenuIcon);
@@ -44,7 +45,7 @@ public class WorkAssignmentPage {
 
 	public void addWBSElement(WebDriver driver, Actions action1, String WBSCode) throws InterruptedException {
 
-		driver.manage().window().setPosition(new Point(0, -3000));
+		// driver.manage().window().setPosition(new Point(0, -3000));
 		WebElement webElementWBSCode = driver.findElement(By.xpath(
 				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]"));
 
@@ -52,7 +53,7 @@ public class WorkAssignmentPage {
 		WebElement viewDataPicker = driver
 				.findElement(By.xpath("//img[@class='datapickericon' and @title='View Data Picker']"));
 		Utils.clickOn(driver, viewDataPicker);
-
+		Thread.sleep(3000L);
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
 
@@ -61,12 +62,18 @@ public class WorkAssignmentPage {
 		while (iterator.hasNext()) {
 
 			String ChildWindow = iterator.next();
+			//System.out.println(ChildWindow);
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
-				driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
+				// driver.switchTo().window(ChildWindow).manage().window().setPosition(new
+				// Point(0, -3000));
+				Thread.sleep(3000L);
+				driver.switchTo().window(ChildWindow).manage().window().maximize();
+				WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
-				// driver.switchTo().window(ChildWindow).manage().window().maximize();
-
+				//explicitWait.until(ExpectedConditions
+					//	.visibilityOfElementLocated(By.linkText("//ul[@id='pickerTabBar']/li[@id='current']/a[contains(text(),'Search')]")));
 				WebElement search = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
+
 				Utils.clickOn(driver, search);
 
 				driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
@@ -95,7 +102,7 @@ public class WorkAssignmentPage {
 				;
 
 				driver.switchTo().window(mainWindowHandle);
-				driver.manage().window().setPosition(new Point(0, -3000));
+				// driver.manage().window().setPosition(new Point(0, -3000));
 
 			}
 		}
@@ -104,7 +111,7 @@ public class WorkAssignmentPage {
 
 	public void createTask(WebDriver driver, WebDriverWait wait, Actions action1, ExcelDataObject excelDataobject,
 			String currentProjectName) throws InterruptedException {
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 		// TODO Auto-generated method stub
 		try {
 
@@ -181,10 +188,8 @@ public class WorkAssignmentPage {
 		Utils.rightClickOnElementbyActions(driver, taskWebElement, action1);
 
 		Thread.sleep(3000L);
-		driver.findElement(By.xpath("//a[contains(text(),'Task Information')]")).click();
-
-		Thread.sleep(3000L);
-
+		WebElement taskInformation = driver.findElement(By.xpath("//a[contains(text(),'Task Information')]"));
+		Utils.clickOn(driver, taskInformation);
 	}
 
 	public void deleteTask(WebDriver driver, Actions action1) throws InterruptedException {
@@ -200,14 +205,10 @@ public class WorkAssignmentPage {
 				.contextClick().build().perform();
 
 		WebElement deleteOptionClick = driver.findElement(By.xpath("//a[contains(text(),'Delete')]"));
-		Thread.sleep(3000L);
+
 		deleteOptionClick.click();
 
-		Thread.sleep(3000L);
-
 		driver.switchTo().alert().accept();
-		Thread.sleep(3000L);
-
 	}
 
 	public List<WebElement> getallCount(WebDriver driver, ExcelDataObject excelDataObject) {
