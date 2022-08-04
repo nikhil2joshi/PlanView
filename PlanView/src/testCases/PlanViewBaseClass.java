@@ -1,10 +1,13 @@
 package testCases;
 
 import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -43,14 +46,18 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import testData.ExcelDataObject;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Color;
 
 //import javax.swing.JRadioButton;
 
-public class PlanViewBaseClass {
+@SuppressWarnings("serial")
+public class PlanViewBaseClass extends Canvas {
+	private static final long serialVersionUID = 8728907093426395406L;
 	public static List<ExcelDataObject> excelDataObjects;
 	public static ChromeOptions options;
 	public static int globalWait;
+	public static String file_path;
 	static {
 		String path = System.getProperty("user.dir");
 		System.setProperty("webdriver.chrome.driver", path + "\\msedgedriver.exe");
@@ -63,15 +70,25 @@ public class PlanViewBaseClass {
 	private static JTextArea textArea_Console;
 	private static JFileChooser fileChooser;
 	private static JLabel filePath;
+	private static JPanel panel_2 = new JPanel();
+	private static JPanel panel = new JPanel();
 
 	/**
 	 * Launch the application.
 	 */
+
+	public void paint(Graphics g) {
+		Image i = Toolkit.getDefaultToolkit().getImage(System.getProperty("user.dir") + "\\Worldline.JPG");
+		g.drawImage(i, 900, 100, this);
+	}
+
 	public static void main(String[] args) {
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				PlanViewBaseClass pvc = new PlanViewBaseClass();
+				panel.add(pvc);
+
 				PlanViewBaseClass.frame.setVisible(true);
 				PlanViewBaseClass.frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 				textArea_Console.setText(null);
@@ -108,7 +125,8 @@ public class PlanViewBaseClass {
 							BufferedReader br = new BufferedReader(new FileReader(file));
 							String str = br.readLine();
 							String s[] = str.split("=", 0);
-							globalWait = (Integer.parseInt(s[1])) / 2;
+							globalWait = Integer.parseInt(s[1]);
+							br.close();
 						} catch (FileNotFoundException e3) {
 							// TODO Auto-generated catch block
 							System.out.println("Configuration file not found");
@@ -116,7 +134,7 @@ public class PlanViewBaseClass {
 							System.out.println("I/O Exception while accessing config file");
 
 						}
-						//options = new Options();
+						// options = new Options();
 						// options.addArguments("--headless");
 						textArea_Console.setText(null);
 						WebDriver driver = new EdgeDriver();
@@ -140,7 +158,7 @@ public class PlanViewBaseClass {
 
 							ExcelDataObject excelDataObject = new ExcelDataObject();
 							List<ExcelDataObject> excelDataObjects2 = null;
-							String file_path = filePath.getText();
+							file_path = filePath.getText();
 							file_path = file_path.replace("\\", "\\\\");
 							excelDataObjects2 = excelDataObject.getExcelData(file_path, excelDataObjects);
 
@@ -176,6 +194,23 @@ public class PlanViewBaseClass {
 								}
 
 							}
+
+							boolean flagForOnlyOneTask = false;
+
+							if (!iterator.hasNext() && excelDataObject.empName != null) {
+								workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+										currentProjectName);
+
+								newRequirement = new NewRequirement();
+								newRequirement.addNewRequirement(driver, action1, excelDataObject);
+
+								addAllocation = new AddAllocation();
+								addAllocation.addAllocation(driver, action1, excelDataObject);
+
+								flagForOnlyOneTask = true;
+
+							}
+
 							while (iterator.hasNext() && excelDataObject.empName != null) {
 								if (excelDataObject.taskType.equals("New")) {
 									// first task addition without comparison
@@ -183,7 +218,7 @@ public class PlanViewBaseClass {
 											currentProjectName);
 
 									newRequirement = new NewRequirement();
-									newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+									newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 									addAllocation = new AddAllocation();
 									addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -197,7 +232,7 @@ public class PlanViewBaseClass {
 									for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
 
 										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+										newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -206,7 +241,7 @@ public class PlanViewBaseClass {
 									}
 									if (iterator.hasNext())
 										currentTaskName = excelDataObject.taskName;
-								} else if (excelDataObject.taskType.equals("Extension")) {
+								} else if (excelDataObject.taskType.equals("Extend")) {
 									// driver.findElement(By.xpath("//div[@class='tray-content-widget__content
 									// tray-content-widget__right-content']/div[@class='pvFilter
 									// form-field']/input[@type='text']")).sendKeys(excelDataObject.taskName);
@@ -239,7 +274,7 @@ public class PlanViewBaseClass {
 												currentProjectName);
 
 										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+										newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -258,12 +293,12 @@ public class PlanViewBaseClass {
 							}
 
 							// adding task for last entry in excel
-							if (!iterator.hasNext()) {
+							if (!iterator.hasNext() && flagForOnlyOneTask == false) {
 
 								if (currentTaskName.equals(excelDataObject.taskName)
 										&& excelDataObject.taskType.equals("New")) {
 									newRequirement = new NewRequirement();
-									newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+									newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 									addAllocation = new AddAllocation();
 									addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -273,12 +308,12 @@ public class PlanViewBaseClass {
 											currentProjectName);
 
 									newRequirement = new NewRequirement();
-									newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+									newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 									addAllocation = new AddAllocation();
 									addAllocation.addAllocation(driver, action1, excelDataObject);
 
-								} else if (excelDataObject.taskType.equals("Extension")) {
+								} else if (excelDataObject.taskType.equals("Extend")) {
 
 									List<WebElement> alltasks = workAssignmentPage.getallCount(driver, excelDataObject);
 
@@ -312,7 +347,7 @@ public class PlanViewBaseClass {
 												currentProjectName);
 
 										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject.gcmRole);
+										newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -326,6 +361,9 @@ public class PlanViewBaseClass {
 						} catch (InterruptedException e2) {
 							// TODO Auto-generated catch block
 							System.out.println("");
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						} finally {
 							driver.quit();
 						}
@@ -355,7 +393,6 @@ public class PlanViewBaseClass {
 		frame.setState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel panel = new JPanel();
 		panel.setBackground(new Color(102, 255, 204));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
@@ -374,7 +411,6 @@ public class PlanViewBaseClass {
 		gbc_tabbedPane.gridy = 0;
 		panel.add(tabbedPane, gbc_tabbedPane);
 
-		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(new Color(51, 204, 255));
 		tabbedPane.addTab("PlanView", null, panel_2, null);
 		panel_2.setLayout(null);

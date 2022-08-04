@@ -1,5 +1,6 @@
 package testCases;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Iterator;
 
@@ -10,75 +11,80 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import testData.ExcelDataObject;
 import utilties.Utils;
 
 public class NewRequirement {
 
 	WebElement assignmentsubmenuoption;
 
-	public void addNewRequirement(WebDriver driver, Actions action1, String gcmRole) throws InterruptedException {
+	public void addNewRequirement(WebDriver driver, Actions action1, ExcelDataObject excelDataObject)
+			throws InterruptedException, IOException {
 
 		// Click on Requirement
-		
-			//driver.manage().window().setPosition(new Point(0, -3000));
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-			
-			Thread.sleep(3000L);
-			WebElement require = driver.findElement(By.xpath("//a[contains(text(),'Require')]"));
-			Utils.clickOn(driver, require);
-			
-			WebElement Requirement = driver.findElement(By.xpath("//span[contains(text(),'Requirement')][@class='add-line-text']"));
-			Utils.clickOn(driver, Requirement);
 
-			Thread.sleep(3000L);
-			String mainWindowHandle = driver.getWindowHandle();
-			Set<String> allWindowHandles = driver.getWindowHandles();
-			Iterator<String> iterator = allWindowHandles.iterator();
+		// driver.manage().window().setPosition(new Point(0, -3000));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 
-			while (iterator.hasNext()) {
+		Thread.sleep(3000L);
+		WebElement require = driver.findElement(By.xpath("//a[contains(text(),'Require')]"));
+		Utils.clickOn(driver, require);
 
-				String ChildWindow = iterator.next();
-				if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
-					//driver.switchTo().window(ChildWindow).manage().window().setPosition(new Point(0, -3000));
-					driver.switchTo().window(ChildWindow).manage().window().maximize();
-					WebElement searchOption = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
-					Utils.clickOn(driver, searchOption);
-					
-					// Switching to the nested frames so as to reach to intended elements in HTML
-					driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
-					driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
+		WebElement Requirement = driver
+				.findElement(By.xpath("//span[contains(text(),'Requirement')][@class='add-line-text']"));
+		Utils.clickOn(driver, Requirement);
 
-					WebElement searchGCMrole = driver
-							.findElement(By.xpath("//label[contains(text(),'Description')]/following-sibling::input[1]"));
-					searchGCMrole.sendKeys(gcmRole);
+		Thread.sleep(3000L);
+		String mainWindowHandle = driver.getWindowHandle();
+		Set<String> allWindowHandles = driver.getWindowHandles();
+		Iterator<String> iterator = allWindowHandles.iterator();
 
-					WebElement searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
-					Utils.clickOn(driver, searchButton);
-					// click on search button
-					driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
+		while (iterator.hasNext()) {
 
-					/*
-					 * final List<WebElement> iframes = driver.findElements(By.tagName("frame"));
-					 * for (WebElement iframe : iframes) {
-					 * System.out.println(iframe.getAttribute("id")); }
-					 */
+			String ChildWindow = iterator.next();
+			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
+				// driver.switchTo().window(ChildWindow).manage().window().setPosition(new
+				// Point(0, -3000));
+				driver.switchTo().window(ChildWindow).manage().window().maximize();
+				WebElement searchOption = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
+				Utils.clickOn(driver, searchOption);
 
-					// Switch inside the frameSearchlist frame
-					driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
+				// Switching to the nested frames so as to reach to intended elements in HTML
+				driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
+				driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
 
-					
-					WebElement SearchedGCMRole = driver.findElement(By.xpath("//a[contains(text(),'" + gcmRole + "')]"));
-					Utils.clickOn(driver, SearchedGCMRole); // Clicking on searched GCMRole
+				WebElement searchGCMrole = driver
+						.findElement(By.xpath("//label[contains(text(),'Description')]/following-sibling::input[1]"));
+				searchGCMrole.sendKeys(excelDataObject.gcmRole);
 
-					driver.switchTo().defaultContent();
+				WebElement searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
+				Utils.clickOn(driver, searchButton);
+				// click on search button
+				driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
 
-					WebElement OkButton = driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']"));
-					Utils.clickOn(driver,OkButton);
+				/*
+				 * final List<WebElement> iframes = driver.findElements(By.tagName("frame"));
+				 * for (WebElement iframe : iframes) {
+				 * System.out.println(iframe.getAttribute("id")); }
+				 */
 
-					driver.switchTo().window(mainWindowHandle);
-					//driver.manage().window().setPosition(new Point(0, -3000));
-				}
-			}		
+				// Switch inside the frameSearchlist frame
+				driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
+
+				WebElement SearchedGCMRole = driver
+						.findElement(By.xpath("//a[contains(text(),'" + excelDataObject.gcmRole + "')]"));
+				Utils.clickOn(driver, SearchedGCMRole); // Clicking on searched GCMRole
+
+				driver.switchTo().defaultContent();
+
+				WebElement OkButton = driver.findElement(By.xpath("//input[@type='button' and @id = 'OK']"));
+				Utils.clickOn(driver, OkButton);
+
+				driver.switchTo().window(mainWindowHandle);
+				// driver.manage().window().setPosition(new Point(0, -3000));
+				ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1, 8, "Y");
+			}
+		}
 	}
 
 }

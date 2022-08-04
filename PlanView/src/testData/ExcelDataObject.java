@@ -1,7 +1,9 @@
 package testData;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,7 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelDataObject {
-	public String SR;
+	public int SR;
 	public String sequenceID;
 	public String empName;
 	public String taskName;
@@ -23,6 +25,43 @@ public class ExcelDataObject {
 	public String projectName;
 	public String wbsCode;
 	public String taskType;
+	
+
+	public static void setData(String adr, String sht, int rn, int cn, String val) throws IOException {
+
+		FileInputStream fsIP = new FileInputStream(new File(adr)); // Read the spreadsheet that needs to be updated
+
+		XSSFWorkbook wb = new XSSFWorkbook(fsIP); // Access the workbook
+
+		XSSFSheet worksheet = wb.getSheet(sht); // Access the worksheet, so that we can update / modify it.
+
+		Cell cell = null; // declare a Cell object
+
+		cell = worksheet.getRow(rn).getCell(cn); // Access the second cell in second row to update the value
+
+		if (worksheet.getRow(rn) == null) {
+			worksheet.createRow(rn);
+		}
+
+		if (worksheet.getRow(rn).getCell(cn) == null) {
+			worksheet.getRow(rn).createCell(cn);
+		}
+		try {
+			cell.setCellValue(val); // Get current cell value value and overwrite the value
+		} catch (NullPointerException e) {
+			System.out.println("Unable to write in excel due to nullpointer exception... ");
+		} finally {
+
+			fsIP.close();// Close the InputStream
+			FileOutputStream output_file = new FileOutputStream(new File(adr)); // Open FileOutputStream to write
+																				// updates
+
+			wb.write(output_file); // write changes
+			wb.close(); // close the stream
+			output_file.close(); // close the stream
+		}
+
+	}
 
 	public String getdate(String date) {
 		String dateArray1[] = date.split("-");
@@ -114,8 +153,11 @@ public class ExcelDataObject {
 					Cell cell1 = cellIterator.next();
 
 					// Check the cell type and format accordingly
-					if (cell1.getColumnIndex() == 0)
-						excelDataObject.SR = cell1.toString();
+					if (cell1.getColumnIndex() == 0) {
+						double d = Double.parseDouble(cell1.toString());
+						excelDataObject.SR = (int) d;
+					}
+
 					else if (cell1.getColumnIndex() == 1)
 						excelDataObject.empName = cell1.toString();
 					else if (cell1.getColumnIndex() == 2)
@@ -125,10 +167,10 @@ public class ExcelDataObject {
 					else if (cell1.getColumnIndex() == 4)
 						excelDataObject.endDate = excelDataObject.getdate(cell1.toString());
 					else if (cell1.getColumnIndex() == 5)
-						excelDataObject.taskType = cell1.toString();
+						excelDataObject.taskType = cell1.toString();											
 					else if (cell1.getColumnIndex() == 6)
-						excelDataObject.gcmRole = cell1.toString();
-
+						excelDataObject.gcmRole = cell1.toString();	
+						
 				}
 				if (excelDataObject.empName != null) {
 					excelDataObject.wbsCode = wbsCode;

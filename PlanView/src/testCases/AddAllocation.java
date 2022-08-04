@@ -1,5 +1,6 @@
 package testCases;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Iterator;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class AddAllocation {
 
 	@SuppressWarnings("deprecation")
 	public void addAllocation(WebDriver driver, Actions action1, ExcelDataObject excelDataObject)
-			throws InterruptedException {
+			throws InterruptedException, IOException {
 
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		Thread.sleep(3000);
@@ -42,7 +43,7 @@ public class AddAllocation {
 		Thread.sleep(2000L);
 		
 		WebElement allocate = driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"));
-		Thread.sleep(2000L);
+		//Thread.sleep(2000L);
 		Utils.singleclickOnElementbyActions(driver, allocate, action1);
 		
 
@@ -88,7 +89,7 @@ public class AddAllocation {
 					Utils.clickOn(driver, OkButton);
 
 					driver.switchTo().window(mainWindowHandle);
-					Thread.sleep(3000L);
+					//Thread.sleep(3000L);
 					// driver.manage().window().setPosition(new Point(0, -3000));
 
 					WebElement allocate1 = driver.findElement(By.xpath("//a[contains(text(),'Allocate')]"));
@@ -105,16 +106,19 @@ public class AddAllocation {
 					action1.moveToElement(driver.findElement(By.xpath(
 							"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]")))
 							.doubleClick().sendKeys(excelDataObject.startDate).sendKeys(Keys.ENTER).build().perform();
-					Thread.sleep(3000);
+					//Thread.sleep(3000);
 					action1.moveToElement(driver.findElement(By.xpath(
 							"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
 							.doubleClick().sendKeys(excelDataObject.endDate).sendKeys(Keys.ENTER).build().perform();
-					Thread.sleep(3000);
+					//Thread.sleep(3000);
 
 					WebElement hBtnBottom = driver.findElement(By.xpath("//div[contains(@class,'h-btn-bottom')]"));
 					Utils.clickOn(driver, hBtnBottom);
 					System.out.println(
 							"Allocation done for " + excelDataObject.empName + " with " + excelDataObject.taskName);
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,7,"Y");
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,8,"Y");
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,9,"Y");
 
 				} catch (Exception e) {
 					driver.close();
@@ -137,13 +141,16 @@ public class AddAllocation {
 							By.xpath("//div[@class='ui-dialog-buttonset']/button[contains(text(),'Yes')]"));
 					Utils.clickElementByJS(clickYes, driver);
 					e.printStackTrace();
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,7,"Y");
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,8,"N");
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,9,"N");
 				}
 			}
 		}
 	}
 
 	public void extendAllocation(WebDriver driver, Actions action1, ExcelDataObject excelDataObject,
-			WebElement webElement) throws InterruptedException {
+			WebElement webElement) throws InterruptedException, IOException {
 
 		action1.moveToElement(webElement).contextClick().build().perform();
 		Thread.sleep(3000L);
@@ -174,6 +181,8 @@ public class AddAllocation {
 		Utils.clickOn(driver, hBtnBottom);
 		System.out.println(
 				"Extension done for allocation of " + excelDataObject.empName + " with " + excelDataObject.taskName);
+		
+		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,9,"Y");
 
 	}
 
