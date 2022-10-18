@@ -45,6 +45,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import testData.ExcelDataObject;
+import utilties.Utils;
+
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Color;
@@ -60,7 +62,7 @@ public class PlanViewBaseClass extends Canvas {
 	public static String file_path;
 	static {
 		String path = System.getProperty("user.dir");
-		System.setProperty("webdriver.chrome.driver", path + "\\msedgedriver.exe");
+		System.setProperty("webdriver.edge.driver", path + "\\msedgedriver.exe");
 		System.setProperty(EdgeDriverService.EDGE_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
 	}
 
@@ -70,8 +72,7 @@ public class PlanViewBaseClass extends Canvas {
 	private static JTextArea textArea_Console;
 	private static JFileChooser fileChooser;
 	private static JLabel filePath;
-	private static JPanel panel_2 = new JPanel();
-	private static JPanel panel = new JPanel();
+	private static JPanel panel_2 = new JPanel(), panel = new JPanel();
 
 	/**
 	 * Launch the application.
@@ -190,9 +191,7 @@ public class PlanViewBaseClass extends Canvas {
 										// Do nothing here
 									}
 									Thread.sleep(3000L);
-
 								}
-
 							}
 
 							boolean flagForOnlyOneTask = false;
@@ -256,6 +255,13 @@ public class PlanViewBaseClass extends Canvas {
 										action1.moveToElement(tasksToBeExtended).click().build().perform();
 										if (tasksToBeExtended.getText().contains(excelDataObject.taskName)) {
 											tasksToBeExtended.click();
+											WebElement currentSeqIdWebElement = driver.findElement(By.xpath(
+													"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')][contains(@class,'selected')]/div[@style='overflow: hidden; text-align: left;']"));
+											Utils.clickOn(driver, currentSeqIdWebElement);
+											String currentSeqID = currentSeqIdWebElement.getAttribute("title");
+
+											excelDataObject.sequenceID = currentSeqID;
+
 											addAllocation = new AddAllocation();
 											addAllocation.extendAllocation(driver, action1, excelDataObject,
 													tasksToBeExtended);

@@ -36,10 +36,10 @@ public class WorkAssignmentPage {
 		Utils.clickOn(driver, selectWorkAssgmnt);
 		Thread.sleep(3000L);
 		WebElement selectSchedule = driver.findElement(
-				By.xpath("//span[@class='pvSelectContainer form-field tray-button dropdown-button pivot-select']"));
+				By.xpath("//span[@class='button-label']"));
 		Utils.clickElementByJS(selectSchedule, driver);
 		Thread.sleep(3000L);
-		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem2']"));
+		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem0']"));
 		Utils.clickElementByJS(scheduleDropdown, driver);
 
 	}
@@ -63,7 +63,7 @@ public class WorkAssignmentPage {
 		while (iterator.hasNext()) {
 
 			String ChildWindow = iterator.next();
-			//System.out.println(ChildWindow);
+			// System.out.println(ChildWindow);
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
 				// driver.switchTo().window(ChildWindow).manage().window().setPosition(new
 				// Point(0, -3000));
@@ -71,8 +71,8 @@ public class WorkAssignmentPage {
 				driver.switchTo().window(ChildWindow).manage().window().maximize();
 				WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
-				//explicitWait.until(ExpectedConditions
-					//	.visibilityOfElementLocated(By.linkText("//ul[@id='pickerTabBar']/li[@id='current']/a[contains(text(),'Search')]")));
+				// explicitWait.until(ExpectedConditions
+				// .visibilityOfElementLocated(By.linkText("//ul[@id='pickerTabBar']/li[@id='current']/a[contains(text(),'Search')]")));
 				WebElement search = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
 
 				Utils.clickOn(driver, search);
@@ -114,7 +114,7 @@ public class WorkAssignmentPage {
 			String currentProjectName) throws InterruptedException, IOException {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 		// TODO Auto-generated method stub
-			try {
+		try {
 
 			WebElement dockRightIcon = driver.findElement(By.xpath(
 					"//div[@class='vsplitter ui-draggable ui-draggable-handle']/div[1]/div[1]/div[2]/div[@class='dock-right-icon']"));
@@ -147,9 +147,10 @@ public class WorkAssignmentPage {
 		String currentSeqID = currentSeqIdWebElement.getAttribute("title");
 
 		excelDataobject.sequenceID = currentSeqID;
-		
-		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataobject.SR+1,10,excelDataobject.sequenceID);
-		
+
+		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataobject.SR + 1, 10,
+				excelDataobject.sequenceID);
+
 		Thread.sleep(3000L);
 
 		addWBSElement(driver, action1, excelDataobject.wbsCode);
@@ -158,12 +159,12 @@ public class WorkAssignmentPage {
 		action1.moveToElement(driver.findElement(By.xpath(
 				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
 				.doubleClick().sendKeys(excelDataobject.startDate).sendKeys(Keys.ENTER).build().perform();
-		//Thread.sleep(3000L);
+		Thread.sleep(3000L);
 
 		action1.moveToElement(driver.findElement(By.xpath(
 				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l8 r8 hasEditor')][contains(@class,'selected')]")))
 				.doubleClick().sendKeys(excelDataobject.endDate).sendKeys(Keys.ENTER).build().perform();
-		//Thread.sleep(3000L);
+		Thread.sleep(3000L);
 
 		WebElement ContraintType = driver.findElement(By.xpath(
 				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l9 r9 hasEditor')][contains(@class,'selected')]"));
@@ -187,14 +188,16 @@ public class WorkAssignmentPage {
 		Select send2SAP = new Select(driver.findElement(By.xpath("//select[@class='editor-scode']")));
 		Thread.sleep(2000L);
 		send2SAP.selectByVisibleText("Yes");
-
-		WebElement taskWebElement = driver.findElement(By.xpath("//div[@title='" + excelDataobject.sequenceID + "']"));
-		Utils.rightClickOnElementbyActions(driver, taskWebElement, action1);
-
-		Thread.sleep(3000L);
-		WebElement taskInformation = driver.findElement(By.xpath("//a[contains(text(),'Task Information')]"));
-		Utils.clickOn(driver, taskInformation);
-		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataobject.SR+1,7,"Y");
+		/*
+		 * WebElement taskWebElement = driver.findElement(By.xpath("//div[@title='" +
+		 * excelDataobject.sequenceID + "']"));
+		 * Utils.rightClickOnElementbyActions(driver, taskWebElement, action1);
+		 * 
+		 * Thread.sleep(3000L); WebElement taskInformation =
+		 * driver.findElement(By.xpath("//a[contains(text(),'Task Information')]"));
+		 * Utils.clickOn(driver, taskInformation);
+		 */
+		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataobject.SR + 1, 7, "Y");
 	}
 
 	public void deleteTask(WebDriver driver, Actions action1) throws InterruptedException {

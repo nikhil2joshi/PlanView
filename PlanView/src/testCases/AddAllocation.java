@@ -119,6 +119,8 @@ public class AddAllocation {
 					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,7,"Y");
 					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,8,"Y");
 					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,9,"Y");
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 10,
+							excelDataObject.sequenceID);
 
 				} catch (Exception e) {
 					driver.close();
@@ -182,7 +184,10 @@ public class AddAllocation {
 		System.out.println(
 				"Extension done for allocation of " + excelDataObject.empName + " with " + excelDataObject.taskName);
 		
+		
 		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,9,"Y");
+		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,10,excelDataObject.sequenceID);
+		
 
 	}
 
