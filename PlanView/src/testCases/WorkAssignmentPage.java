@@ -35,8 +35,7 @@ public class WorkAssignmentPage {
 
 		Utils.clickOn(driver, selectWorkAssgmnt);
 		Thread.sleep(3000L);
-		WebElement selectSchedule = driver.findElement(
-				By.xpath("//span[@class='button-label']"));
+		WebElement selectSchedule = driver.findElement(By.xpath("//span[@class='button-label']"));
 		Utils.clickElementByJS(selectSchedule, driver);
 		Thread.sleep(3000L);
 		WebElement scheduleDropdown = driver.findElement(By.xpath("//li[@id='pvSelectItem0']"));
@@ -148,9 +147,6 @@ public class WorkAssignmentPage {
 
 		excelDataobject.sequenceID = currentSeqID;
 
-		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataobject.SR + 1, 10,
-				excelDataobject.sequenceID);
-
 		Thread.sleep(3000L);
 
 		addWBSElement(driver, action1, excelDataobject.wbsCode);
@@ -165,6 +161,11 @@ public class WorkAssignmentPage {
 				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l8 r8 hasEditor')][contains(@class,'selected')]")))
 				.doubleClick().sendKeys(excelDataobject.endDate).sendKeys(Keys.ENTER).build().perform();
 		Thread.sleep(3000L);
+		WebElement currentSeqIdWebElement1 = driver.findElement(By.xpath(
+				"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')]/div[@style='overflow: hidden; text-align: left;'][contains(@title,'"
+						+ excelDataobject.sequenceID + "')]"));
+
+		Utils.clickOn(driver, currentSeqIdWebElement1);
 
 		WebElement ContraintType = driver.findElement(By.xpath(
 				"//div[contains(@class,'gridContainer container-widget border-box-sized split-layout-first split-layout-vertical grid-driver')]//div[contains(@class,'slick-cell l9 r9 hasEditor')][contains(@class,'selected')]"));
@@ -197,6 +198,8 @@ public class WorkAssignmentPage {
 		 * driver.findElement(By.xpath("//a[contains(text(),'Task Information')]"));
 		 * Utils.clickOn(driver, taskInformation);
 		 */
+		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataobject.SR + 1, 10,
+				excelDataobject.sequenceID);
 		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataobject.SR + 1, 7, "Y");
 	}
 

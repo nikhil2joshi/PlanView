@@ -16,16 +16,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelDataObject {
 	public int SR;
-	public String sequenceID;
-	public String empName;
-	public String taskName;
-	public String startDate;
-	public String endDate;
-	public String gcmRole;
-	public String projectName;
-	public String wbsCode;
-	public String taskType;
-	
+	public String sequenceID, empName, taskName, startDate, endDate, gcmRole, projectName, wbsCode, taskType,
+			flagTaskAdded, flagGCMAdded, flagResourceAdded;
 
 	public static void setData(String adr, String sht, int rn, int cn, String val) throws IOException {
 
@@ -36,17 +28,17 @@ public class ExcelDataObject {
 		XSSFSheet worksheet = wb.getSheet(sht); // Access the worksheet, so that we can update / modify it.
 
 		Cell cell = null; // declare a Cell object
-
-		cell = worksheet.getRow(rn).getCell(cn); // Access the second cell in second row to update the value
-
-		if (worksheet.getRow(rn) == null) {
-			worksheet.createRow(rn);
-		}
-
-		if (worksheet.getRow(rn).getCell(cn) == null) {
-			worksheet.getRow(rn).createCell(cn);
-		}
 		try {
+			cell = worksheet.getRow(rn).getCell(cn); // Access the second cell in second row to update the value
+
+			if (worksheet.getRow(rn) == null) {
+				worksheet.createRow(rn);
+			}
+
+			if (worksheet.getRow(rn).getCell(cn) == null) {
+				worksheet.getRow(rn).createCell(cn);
+			}
+
 			cell.setCellValue(val); // Get current cell value value and overwrite the value
 		} catch (NullPointerException e) {
 			System.out.println("Unable to write in excel due to nullpointer exception... ");
@@ -167,10 +159,18 @@ public class ExcelDataObject {
 					else if (cell1.getColumnIndex() == 4)
 						excelDataObject.endDate = excelDataObject.getdate(cell1.toString());
 					else if (cell1.getColumnIndex() == 5)
-						excelDataObject.taskType = cell1.toString();											
+						excelDataObject.taskType = cell1.toString();
 					else if (cell1.getColumnIndex() == 6)
-						excelDataObject.gcmRole = cell1.toString();	
-						
+						excelDataObject.gcmRole = cell1.toString();
+					else if (cell1.getColumnIndex() == 7)
+						excelDataObject.flagTaskAdded = cell1.toString();
+					else if (cell1.getColumnIndex() == 8)
+						excelDataObject.flagGCMAdded = cell1.toString();
+					else if (cell1.getColumnIndex() == 9)
+						excelDataObject.flagResourceAdded = cell1.toString();
+					else if (cell1.getColumnIndex() == 10)
+						excelDataObject.sequenceID = cell1.toString();
+
 				}
 				if (excelDataObject.empName != null) {
 					excelDataObject.wbsCode = wbsCode;

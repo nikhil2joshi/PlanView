@@ -24,15 +24,16 @@ public class NewRequirement {
 				By.xpath("//div[@id='tester']/div/div/div/div/div/div/div/div/input[@placeholder='Type to filter']"));
 		Utils.doubleClickOnElementbyActions(driver, taskSearch, action1);
 		taskSearch.clear();
-		taskSearch.sendKeys(excelDataObject.taskName);
-
+		taskSearch.sendKeys(excelDataObject.sequenceID);
+		
 		Thread.sleep(3000L);
 		WebElement currentSeqIdWebElement = driver.findElement(By.xpath(
-				"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')][contains(@class,'selected')]/div[@style='overflow: hidden; text-align: left;']"));
+				"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')]/div[@style='overflow: hidden; text-align: left;'][contains(@title,'"
+						+ excelDataObject.sequenceID + "')]"));
 
 		Utils.clickOn(driver, currentSeqIdWebElement);
 		String currentSeqID = currentSeqIdWebElement.getAttribute("title");
-
+		PlanViewBaseClass.globalSeqID = currentSeqID;
 		excelDataObject.sequenceID = currentSeqID;
 		WebElement taskWebElement = driver.findElement(By.xpath("//div[@title='" + excelDataObject.sequenceID + "']"));
 		Utils.rightClickOnElementbyActions(driver, taskWebElement, action1);

@@ -59,6 +59,7 @@ public class PlanViewBaseClass extends Canvas {
 	public static List<ExcelDataObject> excelDataObjects;
 	public static ChromeOptions options;
 	public static int globalWait;
+	public static String globalSeqID;
 	public static String file_path;
 	static {
 		String path = System.getProperty("user.dir");
@@ -197,8 +198,10 @@ public class PlanViewBaseClass extends Canvas {
 							boolean flagForOnlyOneTask = false;
 
 							if (!iterator.hasNext() && excelDataObject.empName != null) {
-								workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
-										currentProjectName);
+								if (!excelDataObject.flagTaskAdded.equals("Y")) {
+									workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+											currentProjectName);
+								}
 
 								newRequirement = new NewRequirement();
 								newRequirement.addNewRequirement(driver, action1, excelDataObject);
@@ -213,8 +216,10 @@ public class PlanViewBaseClass extends Canvas {
 							while (iterator.hasNext() && excelDataObject.empName != null) {
 								if (excelDataObject.taskType.equals("New")) {
 									// first task addition without comparison
-									workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
-											currentProjectName);
+									if (!excelDataObject.flagTaskAdded.equals("Y")) {
+										workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+												currentProjectName);
+									}
 
 									newRequirement = new NewRequirement();
 									newRequirement.addNewRequirement(driver, action1, excelDataObject);
@@ -231,6 +236,7 @@ public class PlanViewBaseClass extends Canvas {
 									for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
 
 										newRequirement = new NewRequirement();
+										excelDataObject.sequenceID = PlanViewBaseClass.globalSeqID;
 										newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
@@ -276,8 +282,10 @@ public class PlanViewBaseClass extends Canvas {
 									}
 									if (flagTaskFound == false) {
 
-										workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
-												currentProjectName);
+										if (!excelDataObject.flagTaskAdded.equals("Y")) {
+											workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+													currentProjectName);
+										}
 
 										newRequirement = new NewRequirement();
 										newRequirement.addNewRequirement(driver, action1, excelDataObject);
