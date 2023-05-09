@@ -16,12 +16,9 @@ public class Utils {
 			try {
 				Thread.sleep(1000);
 				element.click();
-				// System.out.println("Worked on first click " + element);
 				break;
 			} catch (Exception e) {
-
-				// System.out.println("Inside normal wait for " + i + " " + element);
-				if (i == 10) {
+				if (i == PlanViewBaseClass.globalWait) {
 					throw e;
 				}
 			}
@@ -36,15 +33,13 @@ public class Utils {
 			try {
 				Thread.sleep(1000);
 				JavascriptExecutor js = ((JavascriptExecutor) driver);
+				js.executeScript("arguments[0].scrollIntoView(true);", element);
+				Thread.sleep(1000);
 				js.executeScript("arguments[0].click();", element);
-				// System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
-
-				// System.out.println("Inside JS wait for " + i + " " + element);
-
-				if (i == 10) {
+				if (i == PlanViewBaseClass.globalWait) {
 					throw e;
 				}
 			}
@@ -52,7 +47,7 @@ public class Utils {
 
 	}
 
-	// Perform Click Operation
+	// Perform Click Operation using Actions class
 	public static void singleclickOnElementbyActions(WebDriver driver, WebElement element, Actions action1)
 			throws InterruptedException {
 
@@ -61,20 +56,17 @@ public class Utils {
 			try {
 				Thread.sleep(1000);
 				action1.moveToElement(element).click().build().perform();
-				// System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
-				// Thread.sleep(2000);
-				// System.out.println("Inside Single click wait for " + i + " " + element);
-
-				if (i == 10) {
+				if (i == PlanViewBaseClass.globalWait) {
 					throw e;
 				}
 			}
 		}
 	}
 
+	// Perform right click using Actions class
 	public static void rightClickOnElementbyActions(WebDriver driver, WebElement element, Actions action1)
 			throws InterruptedException {
 
@@ -83,20 +75,17 @@ public class Utils {
 			try {
 				Thread.sleep(1000);
 				action1.moveToElement(element).contextClick().build().perform();
-				// System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
-				// Thread.sleep(2000);
-				// System.out.println("Inside rightClick wait for " + i + " " + element);
-
-				if (i == 10) {
+				if (i == PlanViewBaseClass.globalWait) {
 					throw e;
 				}
 			}
 		}
 	}
 
+	// Perform double click using Actions class
 	public static void doubleClickOnElementbyActions(WebDriver driver, WebElement element, Actions action1)
 			throws InterruptedException {
 
@@ -105,14 +94,10 @@ public class Utils {
 			try {
 				Thread.sleep(1000);
 				action1.moveToElement(element).doubleClick().build().perform();
-				// System.out.println("Worked on first click " + element);
 				break;
 
 			} catch (Exception e) {
-				// Thread.sleep(2000);
-				// System.out.println("Inside DoubleClick wait for " + i + " " + element);
-
-				if (i == 10) {
+				if (i == PlanViewBaseClass.globalWait) {
 					throw e;
 				}
 			}

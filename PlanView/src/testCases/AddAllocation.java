@@ -23,29 +23,39 @@ public class AddAllocation {
 	@SuppressWarnings("deprecation")
 	public void addAllocation(WebDriver driver, Actions action1, ExcelDataObject excelDataObject)
 			throws InterruptedException, IOException {
+		WebElement taskSearch = driver.findElement(
+				By.xpath("//div[@id='tester']/div/div/div/div/div/div/div/div/input[@placeholder='Type to filter']"));
+		Utils.doubleClickOnElementbyActions(driver, taskSearch, action1);
+		taskSearch.clear();
+		taskSearch.sendKeys(excelDataObject.sequenceID);
 
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Thread.sleep(3000);
+		Thread.sleep(1000L);
+		WebElement currentSeqIdWebElement = driver.findElement(By.xpath(
+				"//div[contains(@class,'slick-viewport slick-viewport-top slick-viewport-right')]//div[contains(@class,'slick-cell l3 r3 readonly')]/div[contains(@style,'overflow: hidden; text-align: left;')][contains(@title,'"
+						+ excelDataObject.sequenceID + "')]"));
+
+		Utils.clickOn(driver, currentSeqIdWebElement);
+		String currentSeqID = currentSeqIdWebElement.getAttribute("title");
+		PlanViewBaseClass.globalSeqID = currentSeqID;
+		excelDataObject.sequenceID = currentSeqID;
+		WebElement taskWebElement = driver.findElement(By.xpath("//div[@title='" + excelDataObject.sequenceID + "']"));
+		Utils.rightClickOnElementbyActions(driver, taskWebElement, action1);
+
+		Thread.sleep(1000L);
+		WebElement taskInformation = driver.findElement(By.xpath("//a[contains(text(),'Task Information')]"));
+		Utils.clickOn(driver, taskInformation);
+	
+		Thread.sleep(1000);
 		// driver.manage().window().setPosition(new Point(0, -3000));
-		WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(30));
-		;
-		explicitWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
-				"//div[@class='slick-cell l2 r2 hasEditor selected row-selected row-selected-top row-selected-bottom']")));
-		WebElement bottomRow = driver.findElement(By.xpath(
-				"//div[@class='slick-cell l2 r2 hasEditor selected row-selected row-selected-top row-selected-bottom']"));
 
-		Utils.rightClickOnElementbyActions(driver, bottomRow, action1);
-
-		Thread.sleep(3000);
-
-		WebElement fillReq = driver.findElement(By.xpath("//a[normalize-space(text())='Fill Requirement']"));
-		action1.moveToElement(fillReq).perform();
+		WebElement allocate = driver.findElement(By.xpath("//a[contains(text(),'Allocate')]"));
 		Thread.sleep(2000L);
-		
-		WebElement allocate = driver.findElement(By.xpath("//a[normalize-space(text())='Allocate...']"));
-		//Thread.sleep(2000L);
 		Utils.singleclickOnElementbyActions(driver, allocate, action1);
-		
+		Thread.sleep(2000L);
+
+		WebElement allocationButton = driver.findElement(By.xpath("//span[text()='Allocation']"));
+		Utils.singleclickOnElementbyActions(driver, allocationButton, action1);
+		Thread.sleep(2000L);
 
 		String mainWindowHandle = driver.getWindowHandle();
 		Set<String> allWindowHandles = driver.getWindowHandles();
@@ -59,27 +69,32 @@ public class AddAllocation {
 			if (!mainWindowHandle.equalsIgnoreCase(ChildWindow)) {
 				// driver.switchTo().window(ChildWindow).manage().window().setPosition(new
 				// Point(0, -3000));
+
 				driver.switchTo().window(ChildWindow).manage().window().maximize();
+
+				WebElement search = driver.findElement(By.xpath("//a[contains(text(),'Search')]"));
+				Utils.clickOn(driver, search);
 				try {
 					driver.switchTo().frame(driver.findElement(By.id("iframeSearchView")));
 					driver.switchTo().frame(driver.findElement(By.id("frameAttributes")));
-
-					driver.findElement(By.id("attribute_description")).sendKeys(excelDataObject.empName); // Click on
+					Thread.sleep(2000);
+					driver.findElement(By.id("attribute_description")).sendKeys(excelDataObject.empName); // Click
+																											// on
 																											// Description
 																											// textbox
-					// and send EmpName
-					Thread.sleep(3000);
-					explicitWait.until(ExpectedConditions
-							.invisibilityOfElementLocated(By.xpath("By.xpath(\"//input[@id='_search']\")")));
+																											// and send
+																											// EmpName
+					Thread.sleep(1000);
+
 					WebElement searchButton = driver.findElement(By.xpath("//input[@id='_search']"));
 					Utils.clickOn(driver, searchButton);
 					driver.switchTo().parentFrame(); // Switching back to Parent frame IframeSearchView
 
 					driver.switchTo().frame(driver.findElement(By.id("frameSearchList")));
 
-					Thread.sleep(3000L);
+					Thread.sleep(1000L);
 					// Clicking on searched GCMRole
-					explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("")));
+					// explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("")));
 					WebElement gcmRole = driver
 							.findElement(By.xpath("//a[contains(text(),'" + excelDataObject.empName + "')]"));
 					Utils.clickOn(driver, gcmRole);
@@ -89,7 +104,7 @@ public class AddAllocation {
 					Utils.clickOn(driver, OkButton);
 
 					driver.switchTo().window(mainWindowHandle);
-					//Thread.sleep(3000L);
+					// Thread.sleep(1000L);
 					// driver.manage().window().setPosition(new Point(0, -3000));
 
 					WebElement allocate1 = driver.findElement(By.xpath("//a[contains(text(),'Allocate')]"));
@@ -104,48 +119,45 @@ public class AddAllocation {
 					Utils.clickOn(driver, allocateEmployee);
 
 					action1.moveToElement(driver.findElement(By.xpath(
+							"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
+							.doubleClick().sendKeys(excelDataObject.endDate).sendKeys(Keys.ENTER).build().perform();
+					Thread.sleep(3000);
+					action1.moveToElement(driver.findElement(By.xpath(
 							"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]")))
 							.doubleClick().sendKeys(excelDataObject.startDate).sendKeys(Keys.ENTER).build().perform();
-					//Thread.sleep(3000);
+					Thread.sleep(3000);
 					action1.moveToElement(driver.findElement(By.xpath(
 							"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
 							.doubleClick().sendKeys(excelDataObject.endDate).sendKeys(Keys.ENTER).build().perform();
-					//Thread.sleep(3000);
+					Thread.sleep(3000);
+
+					
 
 					WebElement hBtnBottom = driver.findElement(By.xpath("//div[contains(@class,'h-btn-bottom')]"));
 					Utils.clickOn(driver, hBtnBottom);
 					System.out.println(
 							"Allocation done for " + excelDataObject.empName + " with " + excelDataObject.taskName);
-					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,7,"Y");
-					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,8,"Y");
-					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,9,"Y");
-					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 10,
-							excelDataObject.sequenceID);
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 6, "Y"); // task
+																													// addition
+
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 7, "Y"); // Resource
+																													// addition
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 8,
+							excelDataObject.sequenceID); // sequence ID addition
 
 				} catch (Exception e) {
+					e.printStackTrace();
 					driver.close();
 					driver.switchTo().window(mainWindowHandle);
 					// driver.manage().window().setPosition(new Point(0, -3000));
-					System.out.println(
-							"Allocation not done for " + excelDataObject.empName + " with " + excelDataObject.taskName);
-					WebElement require = driver.findElement(By.xpath("//a[normalize-space(text())='Require']"));
-					Utils.clickOn(driver, require);
 
-					WebElement clickOnGCMRole = driver.findElement(
-							By.xpath("//div[contains(@class,'slick-cell l2 r2 hasEditor')]/div[contains(@title,'"
-									+ excelDataObject.gcmRole + "')]"));
-					Utils.rightClickOnElementbyActions(driver, clickOnGCMRole, action1);
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 6, "Y"); // task
+																													// addition
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 7, "N"); // Resource
+																													// addition
+					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 8,
+							excelDataObject.sequenceID); // sequence ID addition
 
-					WebElement deleteOption = driver.findElement(By.xpath("//a[contains(text(),'Delete')]"));
-					Utils.clickElementByJS(deleteOption, driver);
-
-					WebElement clickYes = driver.findElement(
-							By.xpath("//div[@class='ui-dialog-buttonset']/button[contains(text(),'Yes')]"));
-					Utils.clickElementByJS(clickYes, driver);
-					e.printStackTrace();
-					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,7,"Y");
-					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,8,"N");
-					ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,9,"N");
 				}
 			}
 		}
@@ -155,10 +167,10 @@ public class AddAllocation {
 			WebElement webElement) throws InterruptedException, IOException {
 
 		action1.moveToElement(webElement).contextClick().build().perform();
-		Thread.sleep(3000L);
+		Thread.sleep(1000L);
 		WebElement taskInfo = driver.findElement(By.xpath("//a[contains(text(),'Task Information')]"));
 		Utils.clickOn(driver, taskInfo);
-		Thread.sleep(3000L);
+		Thread.sleep(1000L);
 
 		WebElement allocate = driver.findElement(By.xpath("//a[contains(text(),'Allocate')]"));
 		Utils.clickOn(driver, allocate);
@@ -173,21 +185,22 @@ public class AddAllocation {
 		action1.moveToElement(driver.findElement(By.xpath(
 				"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l6 r6 hasEditor')][contains(@class,'selected')]")))
 				.doubleClick().sendKeys(excelDataObject.startDate).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
+		Thread.sleep(1000);
 		action1.moveToElement(driver.findElement(By.xpath(
 				"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
 				.doubleClick().sendKeys(excelDataObject.endDate).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
-
+		Thread.sleep(1000);
+		action1.moveToElement(driver.findElement(By.xpath(
+				"//div[contains(@class,'pvlp-base-content border-box-sized')]/div/div/div/div/div/div/div/div[contains(@class,'slick-cell l7 r7 hasEditor')][contains(@class,'selected')]")))
+				.doubleClick().sendKeys(excelDataObject.endDate).sendKeys(Keys.ENTER).build().perform();
 		WebElement hBtnBottom = driver.findElement(By.xpath("//div[contains(@class,'h-btn-bottom')]"));
 		Utils.clickOn(driver, hBtnBottom);
 		System.out.println(
 				"Extension done for allocation of " + excelDataObject.empName + " with " + excelDataObject.taskName);
-		
-		
-		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,9,"Y");
-		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR+1,10,excelDataObject.sequenceID);
-		
+
+		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 7, "Y");
+		ExcelDataObject.setData(PlanViewBaseClass.file_path, "Master", excelDataObject.SR + 1, 8,
+				excelDataObject.sequenceID);
 
 	}
 

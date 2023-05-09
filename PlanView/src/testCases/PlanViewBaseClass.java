@@ -5,9 +5,7 @@ import java.awt.Canvas;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -33,37 +31,34 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeDriverService;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import testData.ExcelDataObject;
 import utilties.Utils;
 
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Color;
 
 //import javax.swing.JRadioButton;
-
 @SuppressWarnings("serial")
 public class PlanViewBaseClass extends Canvas {
 	private static final long serialVersionUID = 8728907093426395406L;
 	public static List<ExcelDataObject> excelDataObjects;
-	public static ChromeOptions options;
+	public static EdgeOptions options;
 	public static int globalWait;
 	public static String globalSeqID;
 	public static String file_path;
 	static {
-		String path = System.getProperty("user.dir");
-		System.setProperty("webdriver.edge.driver", path + "\\msedgedriver.exe");
+
 		System.setProperty(EdgeDriverService.EDGE_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
 	}
 
@@ -79,13 +74,8 @@ public class PlanViewBaseClass extends Canvas {
 	 * Launch the application.
 	 */
 
-	public void paint(Graphics g) {
-		Image i = Toolkit.getDefaultToolkit().getImage(System.getProperty("user.dir") + "\\Worldline.JPG");
-		g.drawImage(i, 900, 100, this);
-	}
-
 	public static void main(String[] args) {
-
+		WebDriverManager.edgedriver().setup();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				PlanViewBaseClass pvc = new PlanViewBaseClass();
@@ -119,9 +109,16 @@ public class PlanViewBaseClass extends Canvas {
 
 				btnstartButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						options = new EdgeOptions();
+						options.addArguments("--disable-gpu");
+						options.addArguments("--remote-allow-origins=* ");
+
+						WebDriver driver = new EdgeDriver(options);
+						driver.manage().window().maximize();
+						driver.manage().deleteAllCookies();
 						String currentProjectName = null;
 						String pathOfConfigFile = System.getProperty("user.dir") + "\\Config.txt";
-						// pathOfConfigFile + "\\config.txt");
+
 						File file = new File(pathOfConfigFile);
 						try {
 							BufferedReader br = new BufferedReader(new FileReader(file));
@@ -130,29 +127,26 @@ public class PlanViewBaseClass extends Canvas {
 							globalWait = Integer.parseInt(s[1]);
 							br.close();
 						} catch (FileNotFoundException e3) {
-							// TODO Auto-generated catch block
 							System.out.println("Configuration file not found");
 						} catch (IOException e1) {
 							System.out.println("I/O Exception while accessing config file");
-
 						}
-						// options = new Options();
-						// options.addArguments("--headless");
+
 						textArea_Console.setText(null);
-						WebDriver driver = new EdgeDriver();
+
 						try {
 							redirectSystemStreams(textArea_Console);
 
 							driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 							driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
-							driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+							driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
 							WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 							// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 							driver.get("https://worldline.pvcloud.com/");
 							driver.manage().window().maximize();
 							driver.findElement(By.xpath("//div[@class='wg-pki']//input[4]")).click(); // click on login
 																										// Button
-							Thread.sleep(10000L);// Wait for user to select certificate and enter PIN
+							//Thread.sleep(20000L);// Wait for user to select certificate and enter PIN
 
 							Actions action1 = new Actions(driver);
 
@@ -168,7 +162,7 @@ public class PlanViewBaseClass extends Canvas {
 							// First time add requirement and allocate
 							String currentTaskName = null;
 
-							NewRequirement newRequirement = null;
+							// NewRequirement newRequirement = null;
 							AddAllocation addAllocation = null;
 							WorkAssignmentPage workAssignmentPage = new WorkAssignmentPage();
 
@@ -179,7 +173,7 @@ public class PlanViewBaseClass extends Canvas {
 									SearchProject obj1 = new SearchProject();
 									obj1.searchbyprojectname(driver, wait, excelDataObject.projectName);
 									currentProjectName = excelDataObject.projectName;
-									workAssignmentPage.navigateWorkAssignmentPage(driver, action1, wait);
+									workAssignmentPage.navigateWorkAssignmentPage(driver, action1);
 									excelDataObject = (ExcelDataObject) iterator.next();
 									currentTaskName = excelDataObject.taskName;
 
@@ -198,13 +192,12 @@ public class PlanViewBaseClass extends Canvas {
 							boolean flagForOnlyOneTask = false;
 
 							if (!iterator.hasNext() && excelDataObject.empName != null) {
-								if (!excelDataObject.flagTaskAdded.equals("Y")) {
-									workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
-											currentProjectName);
-								}
 
-								newRequirement = new NewRequirement();
-								newRequirement.addNewRequirement(driver, action1, excelDataObject);
+								workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+										currentProjectName);
+
+								// newRequirement = new NewRequirement();
+								// newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 								addAllocation = new AddAllocation();
 								addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -216,13 +209,12 @@ public class PlanViewBaseClass extends Canvas {
 							while (iterator.hasNext() && excelDataObject.empName != null) {
 								if (excelDataObject.taskType.equals("New")) {
 									// first task addition without comparison
-									if (!excelDataObject.flagTaskAdded.equals("Y")) {
-										workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
-												currentProjectName);
-									}
 
-									newRequirement = new NewRequirement();
-									newRequirement.addNewRequirement(driver, action1, excelDataObject);
+									workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
+											currentProjectName);
+
+									// newRequirement = new NewRequirement();
+									// newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 									addAllocation = new AddAllocation();
 									addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -235,9 +227,9 @@ public class PlanViewBaseClass extends Canvas {
 									// If not then come out of for loop and add new task
 									for (; iterator.hasNext() && currentTaskName.equals(excelDataObject.taskName);) {
 
-										newRequirement = new NewRequirement();
+										// newRequirement = new NewRequirement();
 										excelDataObject.sequenceID = PlanViewBaseClass.globalSeqID;
-										newRequirement.addNewRequirement(driver, action1, excelDataObject);
+										// newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -287,8 +279,8 @@ public class PlanViewBaseClass extends Canvas {
 													currentProjectName);
 										}
 
-										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject);
+										// newRequirement = new NewRequirement();
+										// newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -311,8 +303,10 @@ public class PlanViewBaseClass extends Canvas {
 
 								if (currentTaskName.equals(excelDataObject.taskName)
 										&& excelDataObject.taskType.equals("New")) {
-									newRequirement = new NewRequirement();
-									newRequirement.addNewRequirement(driver, action1, excelDataObject);
+									// newRequirement = new NewRequirement();
+									// newRequirement.addNewRequirement(driver, action1, excelDataObject);
+
+									excelDataObject.sequenceID = PlanViewBaseClass.globalSeqID;
 
 									addAllocation = new AddAllocation();
 									addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -321,8 +315,8 @@ public class PlanViewBaseClass extends Canvas {
 									workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
 											currentProjectName);
 
-									newRequirement = new NewRequirement();
-									newRequirement.addNewRequirement(driver, action1, excelDataObject);
+									// newRequirement = new NewRequirement();
+									// newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 									addAllocation = new AddAllocation();
 									addAllocation.addAllocation(driver, action1, excelDataObject);
@@ -359,9 +353,6 @@ public class PlanViewBaseClass extends Canvas {
 
 										workAssignmentPage.createTask(driver, wait, action1, excelDataObject,
 												currentProjectName);
-
-										newRequirement = new NewRequirement();
-										newRequirement.addNewRequirement(driver, action1, excelDataObject);
 
 										addAllocation = new AddAllocation();
 										addAllocation.addAllocation(driver, action1, excelDataObject);

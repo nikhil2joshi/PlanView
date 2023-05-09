@@ -161,14 +161,10 @@ public class ExcelDataObject {
 					else if (cell1.getColumnIndex() == 5)
 						excelDataObject.taskType = cell1.toString();
 					else if (cell1.getColumnIndex() == 6)
-						excelDataObject.gcmRole = cell1.toString();
-					else if (cell1.getColumnIndex() == 7)
 						excelDataObject.flagTaskAdded = cell1.toString();
-					else if (cell1.getColumnIndex() == 8)
-						excelDataObject.flagGCMAdded = cell1.toString();
-					else if (cell1.getColumnIndex() == 9)
+					else if (cell1.getColumnIndex() == 7)
 						excelDataObject.flagResourceAdded = cell1.toString();
-					else if (cell1.getColumnIndex() == 10)
+					else if (cell1.getColumnIndex() == 8)
 						excelDataObject.sequenceID = cell1.toString();
 
 				}
